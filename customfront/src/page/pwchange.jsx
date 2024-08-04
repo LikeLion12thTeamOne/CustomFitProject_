@@ -14,7 +14,7 @@ const Pwchange = () => {
       <p.Header>
         <img
           id="back"
-          src={`${process.env.PUBLIC_URL}/logo/backbtn.svg`}
+          src="/static/logo/backbtn.svg"
           alt="back button"
           style={{
             position: "absolute",

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
 import * as r from "../style/styledreview";
 
 const Review = () => {
@@ -46,11 +46,14 @@ const Review = () => {
   const fetchUserInfo = async () => {
     try {
       const token = localStorage.getItem("token"); // 로그인 후 저장된 토큰을 가져옵니다.
-      const response = await axios.get("http://127.0.0.1:8000/myPage/profile", {
-        headers: {
-          Authorization: `Token ${token}`, // Authorization 헤더에 토큰을 포함합니다.
-        },
-      });
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/myPage/profile",
+        {
+          headers: {
+            Authorization: `Token ${token}`, // Authorization 헤더에 토큰을 포함합니다.
+          },
+        }
+      );
       setUserInfo(response.data);
     } catch (error) {
       console.error("Error fetching user info:", error);
@@ -78,7 +81,7 @@ const Review = () => {
         };
 
         const response = await axios.get(
-          "http://127.0.0.1:8000/myPage/recommended-products/",
+          "http://127.0.0.1:8000/api/myPage/recommended-products/",
           config
         );
         const products = response.data.map((product) => ({
@@ -132,7 +135,7 @@ const Review = () => {
       <r.Header>
         <img
           id="back"
-          src={`${process.env.PUBLIC_URL}/logo/backbtn.svg`}
+          src="/static/logo/backbtn.svg"
           alt="back button"
           style={{
             position: "absolute",
@@ -144,14 +147,14 @@ const Review = () => {
         />
         <img
           id="logo"
-          src={`${process.env.PUBLIC_URL}/logo/ylogo.svg`}
+          src="/static/logo/ylogo.svg"
           alt="logo"
           width="40px"
           onClick={goMain2}
         />
         <img
           id="alarm"
-          src={`${process.env.PUBLIC_URL}/logo/alarm.svg`}
+          src="/static/logo/alarm.svg"
           alt="alarm button"
           style={{
             position: "absolute",
@@ -163,7 +166,7 @@ const Review = () => {
         />
         <img
           id="menu"
-          src={`${process.env.PUBLIC_URL}/logo/menu.svg`}
+          src="/static/logo/menu.svg"
           alt="menu button"
           style={{
             position: "absolute",
@@ -185,7 +188,7 @@ const Review = () => {
             <r.DropdownItem onClick={goMypage}>
               <img
                 id="mypage"
-                src={`${process.env.PUBLIC_URL}/logo/mypage.svg`}
+                src="/static/logo/mypage.svg"
                 alt="mypage"
                 style={{
                   position: "absolute",
@@ -199,7 +202,7 @@ const Review = () => {
             <r.DropdownItem onClick={goReview}>
               <img
                 id="myreview"
-                src={`${process.env.PUBLIC_URL}/logo/myreview.svg`}
+                src="/static/logo/myreview.svg"
                 alt="myreview"
                 style={{
                   position: "absolute",
@@ -213,7 +216,7 @@ const Review = () => {
             <r.DropdownItem onClick={goMain0}>
               <img
                 id="mainpage"
-                src={`${process.env.PUBLIC_URL}/logo/mainpage.svg`}
+                src="/static/logo/mainpage.svg"
                 alt="mainpage"
                 style={{
                   position: "absolute",
@@ -227,7 +230,7 @@ const Review = () => {
             <r.DropdownItem onClick={goLogin}>
               <img
                 id="logout"
-                src={`${process.env.PUBLIC_URL}/logo/logout.svg`}
+                src="/static/logo/logout.svg"
                 alt="logout"
                 style={{
                   position: "absolute",
@@ -261,11 +264,9 @@ const Review = () => {
         </r.Box>
 
         <r.Under>
-          {userInfo ? (
-            `${userInfo.first_name}님!`
-          ) : (
-            "Loading user information..."
-          )}
+          {userInfo
+            ? `${userInfo.first_name}님!`
+            : "Loading user information..."}
           <br />
           {selectedProduct
             ? `[${selectedProduct.name}]은 어떠셨어요?`
@@ -275,7 +276,7 @@ const Review = () => {
         <r.Button2>
           <img
             id="good"
-            src={`${process.env.PUBLIC_URL}/logo/good.svg`}
+            src="/static/logo/good.svg"
             alt="good"
             width="65px"
             style={{
@@ -285,7 +286,7 @@ const Review = () => {
           />
           <img
             id="bad"
-            src={`${process.env.PUBLIC_URL}/logo/bad.svg`}
+            src="/static/logo/bad.svg"
             alt="bad"
             width="65px"
             style={{

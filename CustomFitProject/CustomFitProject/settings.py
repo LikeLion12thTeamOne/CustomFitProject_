@@ -25,8 +25,8 @@ DEBUG = True
 
 # 허용된 호스트 : 접속을 허용할 호스트들(도메인)을 이 곳에 등록
 # 배포 직전 DEBUG = False로 바꾼다면 이곳에 도메인을 등록
-# ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -90,7 +90,7 @@ REST_FRAMEWORK = {
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://127.0.0.1:3000",
+    "http://127.0.0.1:8000",
 ]
 
 
@@ -116,21 +116,26 @@ CORS_ALLOW_HEADERS = [
 ]
 
 # CSRF 설정
-CSRF_COOKIE_NAME = "csrftoken"
-CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', 'http://127.0.0.1:3000']
+CSRF_COOKIE_NAME = 'csrftoken'
+#CSRF_COOKIE_NAME = 'XSRF-TOKEN'
+#CSRF_HEADER_NAME = 'X-XSRF-TOKEN'
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', 'http://127.0.0.1:8000']
 
+
+#SESSION_COOKIE_SECURE=True
+#CSRF_COOKIE_SECURE=True
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
 
-#
 ROOT_URLCONF = 'CustomFitProject.urls'
 
 # 장고 정적 파일 설정
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'frontend', 'build','static'),
+    os.path.join(BASE_DIR, 'frontend', 'build', 'static'),
+    os.path.join(BASE_DIR, 'frontend', 'build'),
 ]
 
 TEMPLATES = [
@@ -191,6 +196,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

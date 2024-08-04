@@ -3,11 +3,41 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import * as l from "../style/styledmain2";
 
+const getCsrfToken = () => {
+  const csrfToken = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("csrftoken="))
+    ?.split("=")[1];
+  if (csrfToken) {
+    return csrfToken;
+  } else {
+    console.error("CSRF token not found");
+    return null;
+  }
+};
+
 const Main2 = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [userError, setUserError] = useState(null);
+  const [box2Items, setBox2Items] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [list2Items, setList2Items] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [cartError, setCartError] = useState(null);
+
+  const axiosInstance = axios.create({
+    baseURL: "http://127.0.0.1:8000/api/",
+    headers: {
+      Authorization: `Token ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCsrfToken(),
+    },
+    withCredentials: true,
+  });
 
   const goMypage = () => {
     navigate(`/Mypage`);
@@ -33,25 +63,19 @@ const Main2 = () => {
     setIsMenuOpen(false);
   };
 
-  // 사용자 정보를 가져오는 함수
   const fetchUserInfo = async () => {
     try {
-      const token = localStorage.getItem("token"); // 로그인 후 저장된 토큰을 가져옵니다.
+      const token = localStorage.getItem("token");
       if (!token) {
         throw new Error("로그인 토큰이 없습니다.");
       }
 
-      const response = await axios.get("http://127.0.0.1:8000/myPage/profile", {
-        headers: {
-          Authorization: `Token ${token}`, // Authorization 헤더에 토큰을 포함합니다.
-        },
-      });
-
-      console.log("사용자 정보:", response.data); // 디버그 로그 추가
+      const response = await axiosInstance.get("myPage/profile");
+      console.log("사용자 정보:", response.data);
       setUserInfo(response.data);
     } catch (error) {
       console.error("사용자 정보 가져오기 오류:", error.message);
-      setUserError(error.message); // 에러 메시지 설정
+      setUserError(error.message);
     }
   };
 
@@ -62,33 +86,13 @@ const Main2 = () => {
     hypertension: "고혈압",
   };
 
-  // 사용자 정보에서 질병 이름을 변환
   const getDiseaseName = (diseaseKey) => {
     return diseaseMapping[diseaseKey] || diseaseKey;
   };
 
-  // 컴포넌트가 마운트될 때 사용자 정보를 가져옵니다.
   useEffect(() => {
     fetchUserInfo();
   }, []);
-
-  // 나머지 상태 및 함수 정의
-  const [box2Items, setBox2Items] = useState([]);
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [list2Items, setList2Items] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [cartError, setCartError] = useState(null);
-
-  const axiosInstance = axios.create({
-    baseURL: "http://127.0.0.1:8000/",
-    headers: {
-      Authorization: `Token ${localStorage.getItem("token")}`,
-      "Content-Type": "application/json",
-      "X-CSRFToken": localStorage.getItem("csrftoken") || "",
-    },
-  });
 
   useEffect(() => {
     const checkCartStatus = async () => {
@@ -102,7 +106,7 @@ const Main2 = () => {
           console.log("카트에 상품이 있습니다.");
         }
       } catch (error) {
-        console.error("빈 상태 확인 중 오류 발생:", error.message);
+        console.error("카트 상태 확인 중 오류 발생:", error.message);
         setError(error);
       } finally {
         setLoading(false);
@@ -166,13 +170,7 @@ const Main2 = () => {
   const addToCart = async (product_id) => {
     try {
       const response = await axiosInstance.post(
-        `customFit/add_cart/${product_id}/`,
-        {},
-        {
-          headers: {
-            "X-CSRFToken": localStorage.getItem("csrftoken") || "",
-          },
-        }
+        `customFit/add_cart/${product_id}/`
       );
       console.log("API 응답:", response.data);
       console.log(`상품 ID ${product_id}이(가) 카트에 추가되었습니다.`);
@@ -185,12 +183,7 @@ const Main2 = () => {
   const removeFromCart = async (product_id) => {
     try {
       const response = await axiosInstance.delete(
-        `customFit/cart/delete_item/${product_id}/`,
-        {
-          headers: {
-            "X-CSRFToken": localStorage.getItem("csrftoken") || "",
-          },
-        }
+        `customFit/cart/delete_item/${product_id}/`
       );
       console.log("API 응답:", response.data);
       console.log(`상품 ID ${product_id}이(가) 카트에서 제거되었습니다.`);
@@ -240,17 +233,9 @@ const Main2 = () => {
     try {
       const itemIds = box2Items.map((item) => item.product_id);
       if (itemIds.length > 0) {
-        await axiosInstance.post(
-          "customFit/cart/clear/",
-          {
-            item_ids: itemIds,
-          },
-          {
-            headers: {
-              "X-CSRFToken": localStorage.getItem("csrftoken") || "",
-            },
-          }
-        );
+        await axiosInstance.post("customFit/cart/clear/", {
+          item_ids: itemIds,
+        });
       }
       setBox2Items([]);
       console.log("Box2의 모든 상품이 카트에서 제거되었습니다.");
@@ -297,7 +282,7 @@ const Main2 = () => {
         return;
       }
 
-      const response = await axiosInstance.get("customFit/compare/");
+      const response = await axiosInstance.post("customFit/compare/");
       const recommendedProduct = response.data.recommended_product;
 
       navigate("/main3", { state: { recommendedProduct } });
@@ -313,13 +298,9 @@ const Main2 = () => {
   };
 
   const handleLogout = () => {
-    // 로컬 저장소에서 사용자 정보를 제거합니다.
-    localStorage.removeItem("user");
-
-    // 세션 저장소에서 사용자 정보를 제거합니다.
+    localStorage.removeItem("token");
     sessionStorage.removeItem("user");
 
-    // 쿠키 제거 (필요한 경우)
     document.cookie.split(";").forEach((c) => {
       document.cookie = c
         .trim()
@@ -327,8 +308,6 @@ const Main2 = () => {
     });
 
     console.log("로그아웃 성공");
-
-    // 로그인 페이지로 리디렉션합니다.
     navigate("/Login");
   };
 
@@ -341,7 +320,6 @@ const Main2 = () => {
   }
 
   if (userError) {
-    // 사용자 정보 에러가 있는 경우
     return <div>Error: {userError}</div>;
   }
 
@@ -350,7 +328,7 @@ const Main2 = () => {
   }
 
   return (
-    <l.Container>
+    <l.Container isMenuOpen={isMenuOpen}>
       <l.Header>
         <img
           id="back"
@@ -559,7 +537,7 @@ const Main2 = () => {
               src={`${process.env.PUBLIC_URL}/logo/trash.svg`}
               alt="휴지통"
               width="21px"
-              height="22"
+              height="22px"
               onClick={clearSelectedItems}
             />
           </l.Icon>

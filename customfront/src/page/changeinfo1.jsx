@@ -10,7 +10,7 @@ const Changeinfo1 = () => {
   const [userError, setUserError] = useState(null); // 사용자 정보 에러를 관리
   const [loading, setLoading] = useState(false); // 로딩 상태를 관리
   const [apiError, setApiError] = useState(null); // API 에러를 관리
-  
+
   useEffect(() => {
     fetchUserInfo(); // 컴포넌트가 마운트될 때 사용자 정보를 가져오는 함수 호출
   }, []);
@@ -19,21 +19,24 @@ const Changeinfo1 = () => {
   const fetchUserInfo = async () => {
     setLoading(true); // 로딩 시작
     try {
-      const token = localStorage.getItem('token'); // 로그인 후 저장된 토큰을 가져옵니다.
+      const token = localStorage.getItem("token"); // 로그인 후 저장된 토큰을 가져옵니다.
       if (!token) {
-        throw new Error('로그인 토큰이 없습니다.');
+        throw new Error("로그인 토큰이 없습니다.");
       }
 
-      const response = await axios.get('http://127.0.0.1:8000/myPage/profile', {
-        headers: {
-          'Authorization': `Token ${token}`  // Authorization 헤더에 토큰을 포함합니다.
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/myPage/profile",
+        {
+          headers: {
+            Authorization: `Token ${token}`, // Authorization 헤더에 토큰을 포함합니다.
+          },
         }
-      });
+      );
 
-      console.log('사용자 정보:', response.data); // 디버그 로그 추가
+      console.log("사용자 정보:", response.data); // 디버그 로그 추가
       setUserInfo(response.data); // 사용자 정보 저장
     } catch (error) {
-      console.error('사용자 정보 가져오기 오류:', error.message);
+      console.error("사용자 정보 가져오기 오류:", error.message);
       setUserError(error.message); // 에러 메시지 설정
     } finally {
       setLoading(false); // 로딩 종료
@@ -48,24 +51,26 @@ const Changeinfo1 = () => {
   const updateAge = async (ageRange) => {
     setLoading(true); // 로딩 시작
     try {
-      const token = localStorage.getItem('token'); // 로그인 후 저장된 토큰을 가져옵니다.
+      const token = localStorage.getItem("token"); // 로그인 후 저장된 토큰을 가져옵니다.
       if (!token) {
-        throw new Error('로그인 토큰이 없습니다.');
+        throw new Error("로그인 토큰이 없습니다.");
       }
 
-      const response = await axios.put('http://127.0.0.1:8000/myPage/update/age/', 
-      { age: ageRange },
-      {
-        headers: {
-          'Authorization': `Token ${token}`,  // Authorization 헤더에 토큰을 포함합니다.
-          'Content-Type': 'application/json'
+      const response = await axios.put(
+        "http://127.0.0.1:8000/api/myPage/update/age/",
+        { age: ageRange },
+        {
+          headers: {
+            Authorization: `Token ${token}`, // Authorization 헤더에 토큰을 포함합니다.
+            "Content-Type": "application/json",
+          },
         }
-      });
+      );
 
-      console.log('나이 업데이트 성공:', response.data); // 디버그 로그 추가
+      console.log("나이 업데이트 성공:", response.data); // 디버그 로그 추가
       // 여기서 추가적인 상태 업데이트나 화면 전환을 수행할 수 있습니다.
     } catch (error) {
-      console.error('나이 업데이트 오류:', error.message);
+      console.error("나이 업데이트 오류:", error.message);
       setApiError(error.message); // 에러 메시지 설정
     } finally {
       setLoading(false); // 로딩 종료
@@ -76,13 +81,13 @@ const Changeinfo1 = () => {
   const handleBoxClick = (index) => {
     setSelectedBox(index); // 클릭된 박스의 인덱스를 상태로 저장
     const ageRanges = [
-      'under_19', 
-      '20-29', 
-      '30-39',
-      '40-49',
-      '50-59',
-      '60-69',
-      'over_70',
+      "under_19",
+      "20-29",
+      "30-39",
+      "40-49",
+      "50-59",
+      "60-69",
+      "over_70",
     ];
     updateAge(ageRanges[index]); // 선택된 연령대로 업데이트
   };
@@ -91,7 +96,8 @@ const Changeinfo1 = () => {
     return <div>Loading...</div>;
   }
 
-  if (userError) { // 사용자 정보 에러가 있는 경우
+  if (userError) {
+    // 사용자 정보 에러가 있는 경우
     return <div>Error: {userError}</div>;
   }
 
@@ -99,7 +105,8 @@ const Changeinfo1 = () => {
     return <div>Loading...</div>;
   }
 
-  if (apiError) { // API 에러가 있는 경우
+  if (apiError) {
+    // API 에러가 있는 경우
     return <div>Error: {apiError}</div>;
   }
 
@@ -108,7 +115,7 @@ const Changeinfo1 = () => {
       <i1.Header>
         <img
           id="back"
-          src={`${process.env.PUBLIC_URL}/logo/backbtn.svg`}
+          src="/static/logo/backbtn.svg"
           alt="back button"
           style={{
             position: "absolute",
@@ -145,8 +152,8 @@ const Changeinfo1 = () => {
         <i1.Box>
           <i1.Box2>
             {[
-              "19세 이하", 
-              "20-29세", 
+              "19세 이하",
+              "20-29세",
               "30-39세",
               "40-49세",
               "50-59세",
@@ -170,7 +177,7 @@ const Changeinfo1 = () => {
         <i1.Button>
           <img
             id="restore"
-            src={`${process.env.PUBLIC_URL}/logo/restore.svg`}
+            src="/static/logo/restore.svg"
             alt="restore"
             onClick={goChangeInfo}
           />

@@ -19,21 +19,24 @@ const Changeinfo5 = () => {
   const fetchUserInfo = async () => {
     setLoading(true); // 로딩 시작
     try {
-      const token = localStorage.getItem('token'); // 로그인 후 저장된 토큰을 가져옵니다.
+      const token = localStorage.getItem("token"); // 로그인 후 저장된 토큰을 가져옵니다.
       if (!token) {
-        throw new Error('로그인 토큰이 없습니다.');
+        throw new Error("로그인 토큰이 없습니다.");
       }
 
-      const response = await axios.get('http://127.0.0.1:8000/myPage/profile', {
-        headers: {
-          'Authorization': `Token ${token}`  // Authorization 헤더에 토큰을 포함합니다.
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/myPage/profile",
+        {
+          headers: {
+            Authorization: `Token ${token}`, // Authorization 헤더에 토큰을 포함합니다.
+          },
         }
-      });
+      );
 
-      console.log('사용자 정보:', response.data); // 디버그 로그 추가
+      console.log("사용자 정보:", response.data); // 디버그 로그 추가
       setUserInfo(response.data); // 사용자 정보 저장
     } catch (error) {
-      console.error('사용자 정보 가져오기 오류:', error.message);
+      console.error("사용자 정보 가져오기 오류:", error.message);
       setUserError(error.message); // 에러 메시지 설정
     } finally {
       setLoading(false); // 로딩 종료
@@ -48,51 +51,51 @@ const Changeinfo5 = () => {
   const updateWeight = async (weightRange) => {
     setLoading(true); // 로딩 시작
     try {
-      const token = localStorage.getItem('token'); // 로그인 후 저장된 토큰을 가져옵니다.
+      const token = localStorage.getItem("token"); // 로그인 후 저장된 토큰을 가져옵니다.
       if (!token) {
-        throw new Error('로그인 토큰이 없습니다.');
+        throw new Error("로그인 토큰이 없습니다.");
       }
-  
+
       const response = await axios.put(
-        'http://127.0.0.1:8000/myPage/update/weight/', // API 엔드포인트
+        "http://127.0.0.1:8000/api/myPage/update/weight/", // API 엔드포인트
         { weight: weightRange }, // 요청 데이터
         {
           headers: {
-            'Authorization': `Token ${token}`,
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
+          },
         }
       );
-  
-      console.log('몸무게 업데이트 성공:', response.data); // 디버그 로그 추가
+
+      console.log("몸무게 업데이트 성공:", response.data); // 디버그 로그 추가
     } catch (error) {
-      console.error('몸무게 업데이트 오류:', error.message);
+      console.error("몸무게 업데이트 오류:", error.message);
       if (error.response) {
-        console.error('응답 데이터:', error.response.data);
+        console.error("응답 데이터:", error.response.data);
       }
       setApiError(error.message); // 에러 메시지 설정
     } finally {
       setLoading(false); // 로딩 종료
     }
   };
-  
+
   const handleBoxClick = (index) => {
     setSelectedBox(index); // 클릭된 박스의 인덱스를 상태로 저장
     const weightRanges = [
-      'under_39', 
-      '40-44', 
-      '45-49', 
-      '50-54', 
-      '55-59', 
-      '60-64', 
-      '65-69',
-      '70-74', 
-      '75-79', 
-      '80-84',
-      '85-89', 
-      '90-94', 
-      '95-99', 
-      'over_100', 
+      "under_39",
+      "40-44",
+      "45-49",
+      "50-54",
+      "55-59",
+      "60-64",
+      "65-69",
+      "70-74",
+      "75-79",
+      "80-84",
+      "85-89",
+      "90-94",
+      "95-99",
+      "over_100",
     ];
     updateWeight(weightRanges[index]); // 선택된 몸무게 범위로 업데이트
   };
@@ -101,7 +104,8 @@ const Changeinfo5 = () => {
     return <div>Loading...</div>;
   }
 
-  if (userError) { // 사용자 정보 에러가 있는 경우
+  if (userError) {
+    // 사용자 정보 에러가 있는 경우
     return <div>Error: {userError}</div>;
   }
 
@@ -109,7 +113,8 @@ const Changeinfo5 = () => {
     return <div>Loading...</div>;
   }
 
-  if (apiError) { // API 에러가 있는 경우
+  if (apiError) {
+    // API 에러가 있는 경우
     return <div>Error: {apiError}</div>;
   }
 
@@ -118,7 +123,7 @@ const Changeinfo5 = () => {
       <i5.Header>
         <img
           id="back"
-          src={`${process.env.PUBLIC_URL}/logo/backbtn.svg`}
+          src="/static/logo/backbtn.svg"
           alt="back button"
           style={{
             position: "absolute",
@@ -186,7 +191,7 @@ const Changeinfo5 = () => {
         <i5.Button>
           <img
             id="restore"
-            src={`${process.env.PUBLIC_URL}/logo/restore.svg`}
+            src="/static/logo/restore.svg"
             alt="restore"
             onClick={goChangeinfo}
           />

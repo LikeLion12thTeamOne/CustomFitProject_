@@ -38,24 +38,25 @@ const Reviewcheck2 = () => {
     setIsMenuOpen(false);
   };
 
-
-
   useEffect(() => {
     const fetchProductData = async () => {
       if (product) {
         try {
-          const token = localStorage.getItem('token');
+          const token = localStorage.getItem("token");
           if (!token) {
             throw new Error("No token found");
           }
 
           const config = {
             headers: {
-              'Authorization': `Token ${token}`
-            }
+              Authorization: `Token ${token}`,
+            },
           };
 
-          const response = await axios.get(`http://127.0.0.1:8000/myPage/recommended-products/${product.id}/`, config);
+          const response = await axios.get(
+            `http://127.0.0.1:8000/api/myPage/recommended-products/${product.id}/`,
+            config
+          );
           setProductData(response.data);
         } catch (err) {
           if (err.message === "No token found") {
@@ -88,7 +89,7 @@ const Reviewcheck2 = () => {
       <v.Header>
         <img
           id="back"
-          src={`${process.env.PUBLIC_URL}/logo/backbtn.svg`}
+          src="/static/logo/backbtn.svg"
           alt="back button"
           style={{
             position: "absolute",
@@ -100,14 +101,14 @@ const Reviewcheck2 = () => {
         />
         <img
           id="logo"
-          src={`${process.env.PUBLIC_URL}/logo/ylogo.svg`}
+          src="/static/logo/ylogo.svg"
           alt="logo"
           width="40px"
           onClick={goMain2}
         />
         <img
           id="alarm"
-          src={`${process.env.PUBLIC_URL}/logo/alarm.svg`}
+          src="/static/logo/alarm.svg"
           alt="alarm button"
           style={{
             position: "absolute",
@@ -119,7 +120,7 @@ const Reviewcheck2 = () => {
         />
         <img
           id="menu"
-          src={`${process.env.PUBLIC_URL}/logo/menu.svg`}
+          src="/static/logo/menu.svg"
           alt="menu button"
           style={{
             position: "absolute",
@@ -141,7 +142,7 @@ const Reviewcheck2 = () => {
             <v.DropdownItem onClick={goMypage}>
               <img
                 id="mypage"
-                src={`${process.env.PUBLIC_URL}/logo/mypage.svg`}
+                src="/static/logo/mypage.svg"
                 alt="mypage"
                 style={{
                   position: "absolute",
@@ -155,7 +156,7 @@ const Reviewcheck2 = () => {
             <v.DropdownItem onClick={goReview}>
               <img
                 id="myreview"
-                src={`${process.env.PUBLIC_URL}/logo/myreview.svg`}
+                src="/static/logo/myreview.svg"
                 alt="myreview"
                 style={{
                   position: "absolute",
@@ -169,7 +170,7 @@ const Reviewcheck2 = () => {
             <v.DropdownItem onClick={goMain0}>
               <img
                 id="mainpage"
-                src={`${process.env.PUBLIC_URL}/logo/mainpage.svg`}
+                src="/static/logo/mainpage.svg"
                 alt="mainpage"
                 style={{
                   position: "absolute",
@@ -183,7 +184,7 @@ const Reviewcheck2 = () => {
             <v.DropdownItem onClick={goLogin}>
               <img
                 id="logout"
-                src={`${process.env.PUBLIC_URL}/logo/logout.svg`}
+                src="/static/logo/logout.svg"
                 alt="logout"
                 style={{
                   position: "absolute",
@@ -202,12 +203,14 @@ const Reviewcheck2 = () => {
         <v.Click>
           <img
             id="review-image"
-            src={selectedImage === 'good'
-              ? `${process.env.PUBLIC_URL}/logo/good2.png`
-              : selectedImage === 'bad'
-              ? `${process.env.PUBLIC_URL}/logo/bad2.png`
-              : `${process.env.PUBLIC_URL}/logo/default.png`} // 선택된 이미지가 없을 경우 기본 이미지
-            alt={selectedImage || 'default'}
+            src={
+              selectedImage === "good"
+                ? "/static/logo/good2.png"
+                : selectedImage === "bad"
+                ? "/static/logo/bad2.png"
+                : "/static/logo/default.png" // 선택된 이미지가 없을 경우 기본 이미지
+            }
+            alt={selectedImage || "default"}
             width="95px"
           />
         </v.Click>

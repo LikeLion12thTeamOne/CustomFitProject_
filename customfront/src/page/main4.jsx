@@ -14,7 +14,7 @@ const Main4 = () => {
       <u.Header>
         <img
           id="back"
-          src={`${process.env.PUBLIC_URL}/logo/backbtn.svg`}
+          src="/static/logo/backbtn.svg"
           alt="back button"
           style={{
             position: "absolute",
@@ -26,14 +26,14 @@ const Main4 = () => {
         />
         <img
           id="logo"
-          src={`${process.env.PUBLIC_URL}/logo/ylogo.svg`}
+          src="/static/logo/ylogo.svg"
           alt="logo"
           width="40px"
           onClick={goMain}
         />
         <img
           id="alarm"
-          src={`${process.env.PUBLIC_URL}/logo/alarm.svg`}
+          src="/static/logo/alarm.svg"
           alt="alarm button"
           style={{
             position: "absolute",
@@ -45,7 +45,7 @@ const Main4 = () => {
         />
         <img
           id="menu"
-          src={`${process.env.PUBLIC_URL}/logo/menu.svg`}
+          src="/static/logo/menu.svg"
           alt="menu button"
           style={{
             position: "absolute",
@@ -74,14 +74,14 @@ const Main4 = () => {
       <u.InputBlank>
         <img
           id="ylogo"
-          src={`${process.env.PUBLIC_URL}/logo/ylogo.svg`}
+          src="/static/logo/ylogo.svg"
           alt="logo"
           width="30px"
         />
         <input type="text" placeholder="검색어를 입력하세요." />
         <img
           id="search"
-          src={`${process.env.PUBLIC_URL}/logo/search.svg`}
+          src="/static/logo/search.svg"
           alt="search button"
           onClick={goMain}
         />
@@ -89,7 +89,7 @@ const Main4 = () => {
 
       <img
           id="apple"
-          src={`${process.env.PUBLIC_URL}/logo/apple.svg`}
+          src="/static/logo/apple.svg"
           alt="apple"
           style={{
             position: "absolute",

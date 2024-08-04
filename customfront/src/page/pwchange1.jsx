@@ -14,7 +14,7 @@ const Pwchange1 = () => {
       <p1.Header>
         <img
           id="back"
-          src={`${process.env.PUBLIC_URL}/logo/backbtn.svg`}
+          src="/static/logo/backbtn.svg"
           alt="back button"
           style={{
             position: "absolute",
@@ -35,7 +35,7 @@ const Pwchange1 = () => {
 
       <img
           id="success"
-          src={`${process.env.PUBLIC_URL}/logo/success.svg`}
+          src="/static/logo/success.svg"
           alt="success"
           style={{
             position: "absolute",  
