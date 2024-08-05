@@ -31,7 +31,7 @@ const Alarm2 = () => {
       <y.Header>
         <img
           id="back"
-          src={`${process.env.PUBLIC_URL}/logo/backbtn.svg`}
+          src="/static/logo/backbtn.svg"
           alt="back button"
           style={{
             position: "absolute",
@@ -43,14 +43,14 @@ const Alarm2 = () => {
         />
         <img
           id="logo"
-          src={`${process.env.PUBLIC_URL}/logo/ylogo.svg`}
+          src="/static/logo/ylogo.svg"
           alt="logo"
           width="40px"
           onClick={goMain2}
         />
         <img
           id="alarm"
-          src={`${process.env.PUBLIC_URL}/logo/alarm.svg`}
+          src="/static/logo/alarm.svg"
           alt="alarm button"
           style={{
             position: "absolute",
@@ -62,7 +62,7 @@ const Alarm2 = () => {
         />
         <img
           id="menu"
-          src={`${process.env.PUBLIC_URL}/logo/menu.svg`}
+          src="/static/logo/menu.svg"
           alt="menu button"
           style={{
             position: "absolute",
@@ -81,20 +81,21 @@ const Alarm2 = () => {
         <y.Top>
           <img
             id="alarm2"
-            src={`${process.env.PUBLIC_URL}/logo/alarm2.svg`}
+            src="/static/logo/alarm2.svg"
             alt="alarm2"
             style={{
-              height: "750px"
-
+              height: "750px",
             }}
           />
         </y.Top>
       </y.Ybox>
 
       <y.Body>
-          <y.Button>
-            <y.ButtonText onClick={goChangeinfo}>키워드 변경하러 가기</y.ButtonText>
-          </y.Button>
+        <y.Button>
+          <y.ButtonText onClick={goChangeinfo}>
+            키워드 변경하러 가기
+          </y.ButtonText>
+        </y.Button>
       </y.Body>
 
       {isMenuOpen && (
@@ -104,7 +105,7 @@ const Alarm2 = () => {
             <y.DropdownItem onClick={() => navigate("/mypage")}>
               <img
                 id="mypage"
-                src={`${process.env.PUBLIC_URL}/logo/mypage.svg`}
+                src="/static/logo/mypage.svg"
                 alt="mypage"
                 style={{
                   position: "absolute",
@@ -118,7 +119,7 @@ const Alarm2 = () => {
             <y.DropdownItem onClick={() => navigate("/myreview")}>
               <img
                 id="myreview"
-                src={`${process.env.PUBLIC_URL}/logo/myreview.svg`}
+                src="/static/logo/myreview.svg"
                 alt="myreview"
                 style={{
                   position: "absolute",
@@ -132,7 +133,7 @@ const Alarm2 = () => {
             <y.DropdownItem onClick={goMain0}>
               <img
                 id="mainpage"
-                src={`${process.env.PUBLIC_URL}/logo/mainpage.svg`}
+                src="/static/logo/mainpage.svg"
                 alt="mainpage"
                 style={{
                   position: "absolute",

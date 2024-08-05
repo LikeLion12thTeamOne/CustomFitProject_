@@ -5,6 +5,7 @@ from .views import (
     UserRegistrationStep4View, UserRegistrationStep5View, UserRegistrationStep6View
 )
 
+
 urlpatterns = [
     path('register/session/', GetSessionDataView.as_view(), name='get-session-data'),  # 추가된 부분
 
@@ -20,4 +21,5 @@ urlpatterns = [
 
     path('accounts/', include('django.contrib.auth.urls')),
     path('password/', include('django.contrib.auth.urls')), #비밀번호 수정
+
 ]

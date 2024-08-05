@@ -32,7 +32,7 @@ const Reviewcheck1 = () => {
     navigate(`/Main0`);
   };
 
-    const goMain2 = () => {
+  const goMain2 = () => {
     navigate(`/Main2`);
   };
 
@@ -60,16 +60,12 @@ const Reviewcheck1 = () => {
     setIsMenuOpen(false);
   };
 
-
-
-
-
   return (
     <e.Container>
       <e.Header>
         <img
           id="back"
-          src={`${process.env.PUBLIC_URL}/logo/backbtn.svg`}
+          src="/static/logo/backbtn.svg"
           alt="back button"
           style={{
             position: "absolute",
@@ -81,14 +77,14 @@ const Reviewcheck1 = () => {
         />
         <img
           id="logo"
-          src={`${process.env.PUBLIC_URL}/logo/ylogo.svg`}
+          src="/static/logo/ylogo.svg"
           alt="logo"
           width="40px"
           onClick={goMain2}
         />
         <img
           id="alarm"
-          src={`${process.env.PUBLIC_URL}/logo/alarm.svg`}
+          src="/static/logo/alarm.svg"
           alt="alarm button"
           style={{
             position: "absolute",
@@ -100,7 +96,7 @@ const Reviewcheck1 = () => {
         />
         <img
           id="menu"
-          src={`${process.env.PUBLIC_URL}/logo/menu.svg`}
+          src="/static/logo/menu.svg"
           alt="menu button"
           style={{
             position: "absolute",
@@ -122,7 +118,7 @@ const Reviewcheck1 = () => {
             <e.DropdownItem onClick={goMypage}>
               <img
                 id="mypage"
-                src={`${process.env.PUBLIC_URL}/logo/mypage.svg`}
+                src="/static/logo/mypage.svg"
                 alt="mypage"
                 style={{
                   position: "absolute",
@@ -136,7 +132,7 @@ const Reviewcheck1 = () => {
             <e.DropdownItem onClick={goReview}>
               <img
                 id="myreview"
-                src={`${process.env.PUBLIC_URL}/logo/myreview.svg`}
+                src="/static/logo/myreview.svg"
                 alt="myreview"
                 style={{
                   position: "absolute",
@@ -150,7 +146,7 @@ const Reviewcheck1 = () => {
             <e.DropdownItem onClick={goMain0}>
               <img
                 id="mainpage"
-                src={`${process.env.PUBLIC_URL}/logo/mainpage.svg`}
+                src="/static/logo/mainpage.svg"
                 alt="mainpage"
                 style={{
                   position: "absolute",
@@ -164,7 +160,7 @@ const Reviewcheck1 = () => {
             <e.DropdownItem onClick={goLogin}>
               <img
                 id="logout"
-                src={`${process.env.PUBLIC_URL}/logo/logout.svg`}
+                src="/static/logo/logout.svg"
                 alt="logout"
                 style={{
                   position: "absolute",
@@ -200,10 +196,10 @@ const Reviewcheck1 = () => {
                       id="review-image"
                       src={
                         review.selectedImage === "good"
-                          ? `${process.env.PUBLIC_URL}/logo/good2.png`
+                          ? "/static/logo/good2.png"
                           : review.selectedImage === "bad"
-                          ? `${process.env.PUBLIC_URL}/logo/bad2.png`
-                          : `${process.env.PUBLIC_URL}/logo/default.png`
+                          ? "/static/logo/bad2.png"
+                          : "/static/logo/default.png"
                       }
                       alt={review.selectedImage || "default"}
                     />

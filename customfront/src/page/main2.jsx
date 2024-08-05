@@ -36,22 +36,29 @@ const Main2 = () => {
   // 사용자 정보를 가져오는 함수
   const fetchUserInfo = async () => {
     try {
-      const token = localStorage.getItem("token"); // 로그인 후 저장된 토큰을 가져옵니다.
+      const token = localStorage.getItem("token");
       if (!token) {
         throw new Error("로그인 토큰이 없습니다.");
       }
 
-      const response = await axios.get("http://127.0.0.1:8000/myPage/profile", {
-        headers: {
-          Authorization: `Token ${token}`, // Authorization 헤더에 토큰을 포함합니다.
-        },
-      });
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/myPage/profile/",
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      console.log("사용자 정보:", response.data); // 디버그 로그 추가
-      setUserInfo(response.data);
+      if (response.headers["content-type"].includes("application/json")) {
+        console.log("사용자 정보:", response.data);
+        setUserInfo(response.data);
+      } else {
+        throw new Error("서버가 JSON 응답을 반환하지 않았습니다.");
+      }
     } catch (error) {
       console.error("사용자 정보 가져오기 오류:", error.message);
-      setUserError(error.message); // 에러 메시지 설정
     }
   };
 
@@ -354,7 +361,7 @@ const Main2 = () => {
       <l.Header>
         <img
           id="back"
-          src={`${process.env.PUBLIC_URL}/logo/backbtn.svg`}
+          src="/static/logo/backbtn.svg"
           alt="back button"
           style={{
             position: "absolute",
@@ -366,14 +373,14 @@ const Main2 = () => {
         />
         <img
           id="logo"
-          src={`${process.env.PUBLIC_URL}/logo/ylogo.svg`}
+          src="/static/logo/ylogo.svg"
           alt="logo"
           width="40px"
           onClick={() => navigate("/")}
         />
         <img
           id="alarm"
-          src={`${process.env.PUBLIC_URL}/logo/alarm.svg`}
+          src="/static/logo/alarm.svg"
           alt="alarm button"
           style={{
             position: "absolute",
@@ -385,7 +392,7 @@ const Main2 = () => {
         />
         <img
           id="menu"
-          src={`${process.env.PUBLIC_URL}/logo/menu.svg`}
+          src="/static/logo/menu.svg"
           alt="menu button"
           style={{
             position: "absolute",
@@ -407,7 +414,7 @@ const Main2 = () => {
             <l.DropdownItem onClick={goMypage}>
               <img
                 id="mypage"
-                src={`${process.env.PUBLIC_URL}/logo/mypage.svg`}
+                src="/static/logo/mypage.svg"
                 alt="mypage"
                 style={{
                   position: "absolute",
@@ -421,7 +428,7 @@ const Main2 = () => {
             <l.DropdownItem onClick={goMyreview}>
               <img
                 id="myreview"
-                src={`${process.env.PUBLIC_URL}/logo/myreview.svg`}
+                src="/static/logo/myreview.svg"
                 alt="myreview"
                 style={{
                   position: "absolute",
@@ -435,7 +442,7 @@ const Main2 = () => {
             <l.DropdownItem onClick={goMain2}>
               <img
                 id="mainpage"
-                src={`${process.env.PUBLIC_URL}/logo/mainpage.svg`}
+                src="/static/logo/mainpage.svg"
                 alt="mainpage"
                 style={{
                   position: "absolute",
@@ -454,7 +461,7 @@ const Main2 = () => {
             >
               <img
                 id="logout"
-                src={`${process.env.PUBLIC_URL}/logo/logout.svg`}
+                src="/static/logo/logout.svg"
                 alt="logout"
                 style={{
                   position: "absolute",
@@ -477,12 +484,7 @@ const Main2 = () => {
       </l.Keyword>
 
       <l.InputBlank>
-        <img
-          id="ylogo"
-          src={`${process.env.PUBLIC_URL}/logo/ylogo.svg`}
-          alt="로고"
-          width="30px"
-        />
+        <img id="ylogo" src="/static/logo/ylogo.svg" alt="로고" width="30px" />
         <input
           type="text"
           placeholder="검색어를 입력하세요."
@@ -491,7 +493,7 @@ const Main2 = () => {
         />
         <img
           id="search"
-          src={`${process.env.PUBLIC_URL}/logo/search.svg`}
+          src="/static/logo/search.svg"
           alt="검색 버튼"
           onClick={handleSearch}
         />
@@ -543,7 +545,7 @@ const Main2 = () => {
                 <l.DelButton>
                   <img
                     id="del"
-                    src={`${process.env.PUBLIC_URL}/logo/delbtn.svg`}
+                    src="/static/logo/delbtn.svg"
                     alt="삭제 버튼"
                     width="20px"
                     height="20px"
@@ -556,7 +558,7 @@ const Main2 = () => {
           <l.Icon>
             <img
               id="trash"
-              src={`${process.env.PUBLIC_URL}/logo/trash.svg`}
+              src="/static/logo/trash.svg"
               alt="휴지통"
               width="21px"
               height="22"

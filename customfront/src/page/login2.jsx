@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as l2 from "../style/styledlogin2";
@@ -10,37 +11,51 @@ const Login2 = () => {
 
   useEffect(() => {
     const fetchCsrfToken = async () => {
-      const token = localStorage.getItem('csrftoken');
-      setCsrfToken(token);
+      const token = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("csrftoken="))
+        ?.split("=")[1];
+      if (token) {
+        setCsrfToken(token);
+      } else {
+        console.error("CSRF token not found");
+      }
     };
 
     fetchCsrfToken();
   }, []);
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
     try {
-      const response = await fetch("http://127.0.0.1:8000/rest-auth/login/", {
-        method: "POST",
+      const config = {
         headers: {
           "Content-Type": "application/json",
           "X-CSRFToken": csrfToken,
         },
-        body: JSON.stringify({ username, password }),
-      });
+        withCredentials: true,
+      };
+      const body = JSON.stringify({ username, password });
 
-      if (!response.ok) {
+      const res = await axios.post(
+        "http://127.0.0.1:8000/api/rest-auth/login/",
+        body,
+        config
+      );
+
+      if (res.status !== 200) {
         throw new Error("로그인 실패");
       }
 
-      const data = await response.json();
+      const data = res.data;
       console.log("로그인 성공:", data);
 
       // 서버에서 응답한 토큰이 'key' 필드에 있는 경우
-      const token = data.key; 
-      localStorage.setItem('token', token);
+      const token = data.key;
+      localStorage.setItem("token", token);
 
       // 로그인 성공 후 네비게이션 처리
-      navigate(`/info1`);
+      navigate(`/main0`);
     } catch (error) {
       console.error(error);
       alert("로그인 실패: 사용자 이름이나 비밀번호를 확인하세요.");
@@ -65,13 +80,18 @@ const Login2 = () => {
         src="https://lottie.host/8a90597c-f6df-4de5-a72b-a7e8cfb6d37e/lN0eGr8bK9.json"
         background="transparent"
         speed="1"
-        style={{ position: "absolute", width: "300px", height: "300px", top: "200px", left: "50px" }}
+        style={{
+          position: "absolute",
+          width: "300px",
+          height: "300px",
+          top: "200px",
+          left: "50px",
+        }}
         loop
         autoplay
       ></dotlottie-player>
     );
   };
-
 
   return (
     <l2.Container>
@@ -80,7 +100,7 @@ const Login2 = () => {
       </l2.Title>
       <img
         id="logintitle"
-        src={`${process.env.PUBLIC_URL}/logo/logintitle.svg`}
+        src="/static/logo/logintitle.svg"
         alt="logintitle"
         style={{
           position: "absolute",
@@ -88,7 +108,7 @@ const Login2 = () => {
           left: "8px",
           cursor: "pointer",
         }}
-        onClick={() => navigate(-1)}
+        // onClick={() => navigate(-1)}
       />
       <LottiePlayer />
 

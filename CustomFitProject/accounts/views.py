@@ -7,6 +7,13 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from django.middleware.csrf import get_token
+from django.http import JsonResponse
+
+def csrf_token_view(request):
+    csrf_token = get_token(request)
+    return JsonResponse({'csrfToken': csrf_token})
+
 #키워드 입력부분 
 from .serializers import (
     UserRegistrationSerializer, UserAgeSerializer, UserGenderSerializer, 

@@ -62,22 +62,29 @@ const Main3 = () => {
   // 사용자 정보를 가져오는 함수
   const fetchUserInfo = async () => {
     try {
-      const token = localStorage.getItem("token"); // 로그인 후 저장된 토큰을 가져옵니다.
+      const token = localStorage.getItem("token");
       if (!token) {
         throw new Error("로그인 토큰이 없습니다.");
       }
 
-      const response = await axios.get("http://127.0.0.1:8000/myPage/profile", {
-        headers: {
-          Authorization: `Token ${token}`, // Authorization 헤더에 토큰을 포함합니다.
-        },
-      });
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/myPage/profile/",
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      console.log("사용자 정보:", response.data); // 디버그 로그 추가
-      setUserInfo(response.data);
+      if (response.headers["content-type"].includes("application/json")) {
+        console.log("사용자 정보:", response.data);
+        setUserInfo(response.data);
+      } else {
+        throw new Error("서버가 JSON 응답을 반환하지 않았습니다.");
+      }
     } catch (error) {
       console.error("사용자 정보 가져오기 오류:", error.message);
-      setUserError(error.message); // 에러 메시지 설정
     }
   };
 
@@ -111,8 +118,8 @@ const Main3 = () => {
     fetchUserInfo(); // 컴포넌트가 마운트될 때 사용자 정보를 가져옵니다.
   }, []);
 
-
-  if (userError) { // 사용자 정보 에러가 있는 경우
+  if (userError) {
+    // 사용자 정보 에러가 있는 경우
     return <div>Error: {userError}</div>;
   }
 
@@ -125,7 +132,7 @@ const Main3 = () => {
       <z.Header>
         <img
           id="back"
-          src={`${process.env.PUBLIC_URL}/logo/backbtn.svg`}
+          src="/static/logo/backbtn.svg"
           alt="back button"
           style={{
             position: "absolute",
@@ -137,14 +144,14 @@ const Main3 = () => {
         />
         <img
           id="logo"
-          src={`${process.env.PUBLIC_URL}/logo/ylogo.svg`}
+          src="/static/logo/ylogo.svg"
           alt="logo"
           width="40px"
           onClick={goMain2}
         />
         <img
           id="alarm"
-          src={`${process.env.PUBLIC_URL}/logo/alarm.svg`}
+          src="/static/logo/alarm.svg"
           alt="alarm button"
           style={{
             position: "absolute",
@@ -156,7 +163,7 @@ const Main3 = () => {
         />
         <img
           id="menu"
-          src={`${process.env.PUBLIC_URL}/logo/menu.svg`}
+          src="/static/logo/menu.svg"
           alt="menu button"
           style={{
             position: "absolute",
@@ -178,7 +185,7 @@ const Main3 = () => {
             <z.DropdownItem onClick={goMypage}>
               <img
                 id="mypage"
-                src={`${process.env.PUBLIC_URL}/logo/mypage.svg`}
+                src="/static/logo/mypage.svg"
                 alt="mypage"
                 style={{
                   position: "absolute",
@@ -192,7 +199,7 @@ const Main3 = () => {
             <z.DropdownItem onClick={goReview}>
               <img
                 id="myreview"
-                src={`${process.env.PUBLIC_URL}/logo/myreview.svg`}
+                src="/static/logo/myreview.svg"
                 alt="myreview"
                 style={{
                   position: "absolute",
@@ -206,7 +213,7 @@ const Main3 = () => {
             <z.DropdownItem onClick={goMain0}>
               <img
                 id="mainpage"
-                src={`${process.env.PUBLIC_URL}/logo/mainpage.svg`}
+                src="/static/logo/mainpage.svg"
                 alt="mainpage"
                 style={{
                   position: "absolute",
@@ -220,7 +227,7 @@ const Main3 = () => {
             <z.DropdownItem onClick={goLogin}>
               <img
                 id="logout"
-                src={`${process.env.PUBLIC_URL}/logo/logout.svg`}
+                src="/static/logo/logout.svg"
                 alt="logout"
                 style={{
                   position: "absolute",
@@ -248,20 +255,22 @@ const Main3 = () => {
           <z.Stext>{getStextLabel(userInfo.disease)}</z.Stext>
           <z.Ntext>{recommendedProduct?.protein || "N"}g</z.Ntext>
         </z.Wbox>
-        <z.Otext>[{getDiseaseName(userInfo.disease)}] 선택한 다른 회원들의 의견이에요!</z.Otext>
+        <z.Otext>
+          [{getDiseaseName(userInfo.disease)}] 선택한 다른 회원들의 의견이에요!
+        </z.Otext>
       </z.Ybox>
 
       <z.Sbox>
         <z.Button2>
           <img
             id="ylogo"
-            src={`${process.env.PUBLIC_URL}/logo/good10.svg`}
+            src="/static/logo/good10.svg"
             alt="logo"
             width="65px"
           />
           <img
             id="ylogo"
-            src={`${process.env.PUBLIC_URL}/logo/bad10.svg`}
+            src="/static/logo/bad10.svg"
             alt="logo"
             width="65px"
           />
@@ -270,8 +279,7 @@ const Main3 = () => {
         <z.Explain>
           만족도를 체크해 주시면, 추천 알고리즘을 정비하는 데 도움이 돼요!
           <br />
-          {firstName}님의 만족도에 기반하여
-          더 좋은 서비스를 제공할게요!
+          {firstName}님의 만족도에 기반하여 더 좋은 서비스를 제공할게요!
         </z.Explain>
         <z.Star>
           {[1, 2, 3, 4, 5].map((value) => (
@@ -280,8 +288,8 @@ const Main3 = () => {
               className="star"
               src={
                 rating >= value
-                  ? `${process.env.PUBLIC_URL}/logo/fullstar.svg`
-                  : `${process.env.PUBLIC_URL}/logo/star.svg`
+                  ? "/static/logo/fullstar.svg"
+                  : "/static/logo/star.svg"
               }
               onClick={() => handleStarClick(value)}
               alt={`별 ${value}개`}

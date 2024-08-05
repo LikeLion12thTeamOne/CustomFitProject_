@@ -48,8 +48,8 @@ const Alarm1 = () => {
 
   // Box2의 아이템 상태 관리
   const box2Items = [
-    { id: 1, text: "공지 제목입니다."},
-    { id: 2, text: "공지 제목입니다."},
+    { id: 1, text: "공지 제목입니다." },
+    { id: 2, text: "공지 제목입니다." },
   ];
 
   // 아이템 클릭 시 이동할 페이지를 결정하는 함수
@@ -66,7 +66,7 @@ const Alarm1 = () => {
       <q.Header>
         <img
           id="back"
-          src={`${process.env.PUBLIC_URL}/logo/backbtn.svg`}
+          src="/static/logo/backbtn.svg"
           alt="back button"
           style={{
             position: "absolute",
@@ -78,14 +78,14 @@ const Alarm1 = () => {
         />
         <img
           id="logo"
-          src={`${process.env.PUBLIC_URL}/logo/ylogo.svg`}
+          src="/static/logo/ylogo.svg"
           alt="logo"
           width="40px"
           onClick={goMain2}
         />
         <img
           id="alarm"
-          src={`${process.env.PUBLIC_URL}/logo/alarm.svg`}
+          src="/static/logo/alarm.svg"
           alt="alarm button"
           style={{
             position: "absolute",
@@ -97,7 +97,7 @@ const Alarm1 = () => {
         />
         <img
           id="menu"
-          src={`${process.env.PUBLIC_URL}/logo/menu.svg`}
+          src="/static/logo/menu.svg"
           alt="menu button"
           style={{
             position: "absolute",
@@ -119,7 +119,7 @@ const Alarm1 = () => {
             <q.DropdownItem onClick={goMypage}>
               <img
                 id="mypage"
-                src={`${process.env.PUBLIC_URL}/logo/mypage.svg`}
+                src="/static/logo/mypage.svg"
                 alt="mypage"
                 style={{
                   position: "absolute",
@@ -133,7 +133,7 @@ const Alarm1 = () => {
             <q.DropdownItem onClick={goReview}>
               <img
                 id="myreview"
-                src={`${process.env.PUBLIC_URL}/logo/myreview.svg`}
+                src="/static/logo/myreview.svg"
                 alt="myreview"
                 style={{
                   position: "absolute",
@@ -147,7 +147,7 @@ const Alarm1 = () => {
             <q.DropdownItem onClick={goMain0}>
               <img
                 id="mainpage"
-                src={`${process.env.PUBLIC_URL}/logo/mainpage.svg`}
+                src="/static/logo/mainpage.svg"
                 alt="mainpage"
                 style={{
                   position: "absolute",
@@ -161,7 +161,7 @@ const Alarm1 = () => {
             <q.DropdownItem onClick={goLogin}>
               <img
                 id="logout"
-                src={`${process.env.PUBLIC_URL}/logo/logout.svg`}
+                src="/static/logo/logout.svg"
                 alt="logout"
                 style={{
                   position: "absolute",
@@ -183,7 +183,10 @@ const Alarm1 = () => {
         <q.Box>
           <q.Box2>
             {box2Items.map((item) => (
-              <q.Keywordd key={item.id} onClick={() => handleItemClick(item.id)}>
+              <q.Keywordd
+                key={item.id}
+                onClick={() => handleItemClick(item.id)}
+              >
                 <q.SmallBox5>
                   <span style={{ fontSize: "13px" }}>{item.text}</span>
                 </q.SmallBox5>

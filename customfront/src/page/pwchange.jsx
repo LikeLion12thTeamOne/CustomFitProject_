@@ -14,7 +14,7 @@ const Pwchange = () => {
       <p.Header>
         <img
           id="back"
-          src={`${process.env.PUBLIC_URL}/logo/backbtn.svg`}
+          src="/static/logo/backbtn.svg"
           alt="back button"
           style={{
             position: "absolute",
@@ -25,16 +25,12 @@ const Pwchange = () => {
           onClick={() => navigate(-1)}
         />
       </p.Header>
-    <p.Body>
-      <p.Label>비밀번호 변경하기</p.Label>
-      <p.Check>계정 생성시 사용한 E Mail을 입력해주세요.</p.Check>
-          <p.InputBlank>
-          <input
-              type="email"
-              name="email"
-              placeholder="Email 입력하기"
-            />
-          </p.InputBlank>
+      <p.Body>
+        <p.Label>비밀번호 변경하기</p.Label>
+        <p.Check>계정 생성시 사용한 E Mail을 입력해주세요.</p.Check>
+        <p.InputBlank>
+          <input type="email" name="email" placeholder="Email 입력하기" />
+        </p.InputBlank>
         <p.Button onClick={goPwchange1}>
           <p.ButtonText>E Mail로 비밀번호 변경 링크 보내기</p.ButtonText>
         </p.Button>

@@ -45,7 +45,7 @@ const First = () => {
           src="https://lottie.host/8a90597c-f6df-4de5-a72b-a7e8cfb6d37e/lN0eGr8bK9.json"
           background="transparent"
           speed="1"
-          style={{ width: "300px", height: "300px",}}
+          style={{ width: "300px", height: "300px" }}
           loop
           autoplay
         ></dotlottie-player>
@@ -71,7 +71,7 @@ const First = () => {
         <f1.Title>
           <img
             id="title"
-            src={`${process.env.PUBLIC_URL}/logo/title.svg`}
+            src="/static/logo/title.svg"
             alt="title"
             style={{
               position: "absolute",
@@ -88,22 +88,14 @@ const First = () => {
 
         <f1.Button onClick={goLogin}>
           <f1.ButtonText>서비스 이용하기</f1.ButtonText>
-          <img
-            id="down"
-            src={`${process.env.PUBLIC_URL}/logo/down.svg`}
-            alt="down"
-          />
+          <img id="down" src="/static/logo/down.svg" alt="down" />
         </f1.Button>
       </f1.Body>
       <f1.Body2>
-        <img
-          id="text1"
-          src={`${process.env.PUBLIC_URL}/logo/text1.svg`}
-          alt="text1"
-        />
+        <img id="text1" src="/static/logo/text1.svg" alt="text1" />
         <img
           id="text2"
-          src={`${process.env.PUBLIC_URL}/logo/text2.svg`}
+          src="/static/logo/text2.svg"
           alt="text2"
           height="260px"
         />
@@ -142,26 +134,10 @@ const First = () => {
         </f1.Sub>
         <f1.News>
           <f1.Card>
-            <img
-              id="card"
-              src={`${process.env.PUBLIC_URL}/logo/card1.svg`}
-              alt="card"
-            />
-            <img
-              id="card"
-              src={`${process.env.PUBLIC_URL}/logo/card2.svg`}
-              alt="card"
-            />
-            <img
-              id="card"
-              src={`${process.env.PUBLIC_URL}/logo/card3.svg`}
-              alt="card"
-            />
-            <img
-              id="card"
-              src={`${process.env.PUBLIC_URL}/logo/card4.svg`}
-              alt="card"
-            />
+            <img id="card" src="/static/logo/card1.svg" alt="card" />
+            <img id="card" src="/static/logo/card2.svg" alt="card" />
+            <img id="card" src="/static/logo/card3.svg" alt="card" />
+            <img id="card" src="/static/logo/card4.svg" alt="card" />
           </f1.Card>
         </f1.News>
         <f1.Bottom onClick={goLogin}>

@@ -27,7 +27,7 @@ const Alarm3 = () => {
       <a3.Header>
         <img
           id="back"
-          src={`${process.env.PUBLIC_URL}/logo/backbtn.svg`}
+          src="/static/logo/backbtn.svg"
           alt="back button"
           style={{
             position: "absolute",
@@ -39,14 +39,14 @@ const Alarm3 = () => {
         />
         <img
           id="logo"
-          src={`${process.env.PUBLIC_URL}/logo/ylogo.svg`}
+          src="/static/logo/ylogo.svg"
           alt="logo"
           width="40px"
           onClick={goMain2}
         />
         <img
           id="alarm"
-          src={`${process.env.PUBLIC_URL}/logo/alarm.svg`}
+          src="/static/logo/alarm.svg"
           alt="alarm button"
           style={{
             position: "absolute",
@@ -58,7 +58,7 @@ const Alarm3 = () => {
         />
         <img
           id="menu"
-          src={`${process.env.PUBLIC_URL}/logo/menu.svg`}
+          src="/static/logo/menu.svg"
           alt="menu button"
           style={{
             position: "absolute",
@@ -77,11 +77,10 @@ const Alarm3 = () => {
         <a3.Top>
           <img
             id="alarm3"
-            src={`${process.env.PUBLIC_URL}/logo/alarm3.svg`}
+            src="/static/logo/alarm3.svg"
             alt="alarm3"
             style={{
-              height: "750px"
-
+              height: "750px",
             }}
           />
         </a3.Top>
@@ -94,7 +93,7 @@ const Alarm3 = () => {
             <a3.DropdownItem onClick={() => navigate("/mypage")}>
               <img
                 id="mypage"
-                src={`${process.env.PUBLIC_URL}/logo/mypage.svg`}
+                src="/static/logo/mypage.svg"
                 alt="mypage"
                 style={{
                   position: "absolute",
@@ -108,7 +107,7 @@ const Alarm3 = () => {
             <a3.DropdownItem onClick={() => navigate("/myreview")}>
               <img
                 id="myreview"
-                src={`${process.env.PUBLIC_URL}/logo/myreview.svg`}
+                src="/static/logo/myreview.svg"
                 alt="myreview"
                 style={{
                   position: "absolute",
@@ -122,7 +121,7 @@ const Alarm3 = () => {
             <a3.DropdownItem onClick={goMain0}>
               <img
                 id="mainpage"
-                src={`${process.env.PUBLIC_URL}/logo/mainpage.svg`}
+                src="/static/logo/mainpage.svg"
                 alt="mainpage"
                 style={{
                   position: "absolute",

@@ -51,22 +51,29 @@ const Main0 = () => {
   // 사용자 정보를 가져오는 함수
   const fetchUserInfo = async () => {
     try {
-      const token = localStorage.getItem("token"); // 로그인 후 저장된 토큰을 가져옵니다.
+      const token = localStorage.getItem("token");
       if (!token) {
         throw new Error("로그인 토큰이 없습니다.");
       }
 
-      const response = await axios.get("http://127.0.0.1:8000/myPage/profile", {
-        headers: {
-          Authorization: `Token ${token}`, // Authorization 헤더에 토큰을 포함합니다.
-        },
-      });
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/myPage/profile/",
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      console.log("사용자 정보:", response.data); // 디버그 로그 추가
-      setUserInfo(response.data);
+      if (response.headers["content-type"].includes("application/json")) {
+        console.log("사용자 정보:", response.data);
+        setUserInfo(response.data);
+      } else {
+        throw new Error("서버가 JSON 응답을 반환하지 않았습니다.");
+      }
     } catch (error) {
       console.error("사용자 정보 가져오기 오류:", error.message);
-      setUserError(error.message); // 에러 메시지 설정
     }
   };
 
@@ -86,7 +93,8 @@ const Main0 = () => {
     return diseaseMapping[diseaseKey] || diseaseKey;
   };
 
-  if (userError) { // 사용자 정보 에러가 있는 경우
+  if (userError) {
+    // 사용자 정보 에러가 있는 경우
     return <div>Error: {userError}</div>;
   }
 
@@ -99,7 +107,7 @@ const Main0 = () => {
       <k.Header>
         <img
           id="back"
-          src={`${process.env.PUBLIC_URL}/logo/backbtn.svg`}
+          src="/static/logo/backbtn.svg"
           alt="back button"
           style={{
             position: "absolute",
@@ -111,14 +119,14 @@ const Main0 = () => {
         />
         <img
           id="logo"
-          src={`${process.env.PUBLIC_URL}/logo/ylogo.svg`}
+          src="/static/logo/ylogo.svg"
           alt="logo"
           width="40px"
           onClick={goMain2}
         />
         <img
           id="alarm"
-          src={`${process.env.PUBLIC_URL}/logo/alarm.svg`}
+          src="/static/logo/alarm.svg"
           alt="alarm button"
           style={{
             position: "absolute",
@@ -130,7 +138,7 @@ const Main0 = () => {
         />
         <img
           id="menu"
-          src={`${process.env.PUBLIC_URL}/logo/menu.svg`}
+          src="/static/logo/menu.svg"
           alt="menu button"
           style={{
             position: "absolute",
@@ -152,7 +160,7 @@ const Main0 = () => {
             <k.DropdownItem onClick={goMypage}>
               <img
                 id="mypage"
-                src={`${process.env.PUBLIC_URL}/logo/mypage.svg`}
+                src="/static/logo/mypage.svg"
                 alt="mypage"
                 style={{
                   position: "absolute",
@@ -166,7 +174,7 @@ const Main0 = () => {
             <k.DropdownItem onClick={goReview}>
               <img
                 id="myreview"
-                src={`${process.env.PUBLIC_URL}/logo/myreview.svg`}
+                src="/static/logo/myreview.svg"
                 alt="myreview"
                 style={{
                   position: "absolute",
@@ -180,7 +188,7 @@ const Main0 = () => {
             <k.DropdownItem onClick={goMain2}>
               <img
                 id="mainpage"
-                src={`${process.env.PUBLIC_URL}/logo/mainpage.svg`}
+                src="/static/logo/mainpage.svg"
                 alt="mainpage"
                 style={{
                   position: "absolute",
@@ -194,7 +202,7 @@ const Main0 = () => {
             <k.DropdownItem onClick={goLogin}>
               <img
                 id="logout"
-                src={`${process.env.PUBLIC_URL}/logo/logout.svg`}
+                src="/static/logo/logout.svg"
                 alt="logout"
                 style={{
                   position: "absolute",
@@ -208,9 +216,8 @@ const Main0 = () => {
         </>
       )}
 
-
       <k.Top>
-      {userInfo.first_name}님에게 맞는 <br />
+        {userInfo.first_name}님에게 맞는 <br />
         식품을 찾아볼까요?
       </k.Top>
 
@@ -219,60 +226,39 @@ const Main0 = () => {
       </k.Keyword>
 
       <k.Button onClick={goMain2}>
-          <img
-            id="next"
-            src={`${process.env.PUBLIC_URL}/logo/search3.svg`}
-            alt="next"
-          />
-        </k.Button>
+        <img id="next" src="/static/logo/search3.svg" alt="next" />
+      </k.Button>
 
       <k.Body>
         <k.Box2>
-        <k.News>
-          <k.Card>
-            <img
-              id="card"
-              src={`${process.env.PUBLIC_URL}/logo/card1.svg`}
-              alt="card"
-            />
-            <img
-              id="card"
-              src={`${process.env.PUBLIC_URL}/logo/card2.svg`}
-              alt="card"
-            />
-            <img
-              id="card"
-              src={`${process.env.PUBLIC_URL}/logo/card3.svg`}
-              alt="card"
-            />
-            <img
-              id="card"
-              src={`${process.env.PUBLIC_URL}/logo/card4.svg`}
-              alt="card"
-            />
-          </k.Card>
-        </k.News>
+          <k.News>
+            <k.Card>
+              <img id="card" src="/static/logo/card1.svg" alt="card" />
+              <img id="card" src="/static/logo/card2.svg" alt="card" />
+              <img id="card" src="/static/logo/card3.svg" alt="card" />
+              <img id="card" src="/static/logo/card4.svg" alt="card" />
+            </k.Card>
+          </k.News>
         </k.Box2>
-    </k.Body>
+      </k.Body>
 
-        <k.Button2>
-           <img
-            id="myreview"
-            src={`${process.env.PUBLIC_URL}/logo/myreviewbtn.svg`}
-            alt="myreview"
-            onClick={goReview}
-          />
-        </k.Button2>
+      <k.Button2>
+        <img
+          id="myreview"
+          src="/static/logo/myreviewbtn.svg"
+          alt="myreview"
+          onClick={goReview}
+        />
+      </k.Button2>
 
-        <k.Buttontwo>
-           <img
-            id="mypage"
-            src={`${process.env.PUBLIC_URL}/logo/mypagebtn.svg`}
-            alt="mypage"
-            onClick={goMypage}
-          />
-        </k.Buttontwo>
-
+      <k.Buttontwo>
+        <img
+          id="mypage"
+          src="/static/logo/mypagebtn.svg"
+          alt="mypage"
+          onClick={goMypage}
+        />
+      </k.Buttontwo>
     </k.Container>
   );
 };

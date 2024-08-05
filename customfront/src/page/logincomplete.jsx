@@ -15,7 +15,7 @@ const Logincomplete = () => {
         <l3.Box>
           <img
             id="lc"
-            src={`${process.env.PUBLIC_URL}/logo/lc.svg`}
+            src="/static/logo/lc.svg"
             alt="lc"
             style={{
               position: "absolute",

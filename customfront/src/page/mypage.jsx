@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
 import * as m from "../style/styledmypage";
 
 const Mypage = () => {
@@ -55,15 +55,29 @@ const Mypage = () => {
   // 사용자 정보를 가져오는 함수
   const fetchUserInfo = async () => {
     try {
-      const token = localStorage.getItem('token'); // 로그인 후 저장된 토큰을 가져옵니다.
-      const response = await axios.get('http://127.0.0.1:8000/myPage/profile', {
-        headers: {
-          'Authorization': `Token ${token}`  // Authorization 헤더에 토큰을 포함합니다.
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("로그인 토큰이 없습니다.");
+      }
+
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/myPage/profile/",
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
+          },
         }
-      });
-      setUserInfo(response.data);
+      );
+
+      if (response.headers["content-type"].includes("application/json")) {
+        console.log("사용자 정보:", response.data);
+        setUserInfo(response.data);
+      } else {
+        throw new Error("서버가 JSON 응답을 반환하지 않았습니다.");
+      }
     } catch (error) {
-      console.error('Error fetching user info:', error);
+      console.error("사용자 정보 가져오기 오류:", error.message);
     }
   };
 
@@ -147,7 +161,7 @@ const Mypage = () => {
       <m.Header>
         <img
           id="back"
-          src={`${process.env.PUBLIC_URL}/logo/backbtn.svg`}
+          src="/static/logo/backbtn.svg"
           alt="back button"
           style={{
             position: "absolute",
@@ -159,14 +173,14 @@ const Mypage = () => {
         />
         <img
           id="logo"
-          src={`${process.env.PUBLIC_URL}/logo/ylogo.svg`}
+          src="/static/logo/ylogo.svg"
           alt="logo"
           width="40px"
           onClick={goMain2}
         />
         <img
           id="alarm"
-          src={`${process.env.PUBLIC_URL}/logo/alarm.svg`}
+          src="/static/logo/alarm.svg"
           alt="alarm button"
           style={{
             position: "absolute",
@@ -178,7 +192,7 @@ const Mypage = () => {
         />
         <img
           id="menu"
-          src={`${process.env.PUBLIC_URL}/logo/menu.svg`}
+          src="/static/logo/menu.svg"
           alt="menu button"
           style={{
             position: "absolute",
@@ -200,7 +214,7 @@ const Mypage = () => {
             <m.DropdownItem onClick={goMypage}>
               <img
                 id="mypage"
-                src={`${process.env.PUBLIC_URL}/logo/mypage.svg`}
+                src="/static/logo/mypage.svg"
                 alt="mypage"
                 style={{
                   position: "absolute",
@@ -214,7 +228,7 @@ const Mypage = () => {
             <m.DropdownItem onClick={goReview}>
               <img
                 id="myreview"
-                src={`${process.env.PUBLIC_URL}/logo/myreview.svg`}
+                src="/static/logo/myreview.svg"
                 alt="myreview"
                 style={{
                   position: "absolute",
@@ -228,7 +242,7 @@ const Mypage = () => {
             <m.DropdownItem onClick={goMain0}>
               <img
                 id="mainpage"
-                src={`${process.env.PUBLIC_URL}/logo/mainpage.svg`}
+                src="/static/logo/mainpage.svg"
                 alt="mainpage"
                 style={{
                   position: "absolute",
@@ -242,7 +256,7 @@ const Mypage = () => {
             <m.DropdownItem onClick={goLogin}>
               <img
                 id="logout"
-                src={`${process.env.PUBLIC_URL}/logo/logout.svg`}
+                src="/static/logo/logout.svg"
                 alt="logout"
                 style={{
                   position: "absolute",
@@ -258,38 +272,42 @@ const Mypage = () => {
 
       <img
         id="profile"
-        src={`${process.env.PUBLIC_URL}/logo/profile.svg`}
+        src="/static/logo/profile.svg"
         alt="profile"
         style={{
           position: "absolute",
           top: "97px",
           left: "48px",
           cursor: "pointer",
-          zIndex: "8"
+          zIndex: "8",
         }}
       />
 
       <m.Top></m.Top>
 
-      <m.Name>
-        {userInfo.first_name} 님
-      </m.Name>
+      <m.Name>{userInfo.first_name} 님</m.Name>
 
       <m.Keyword>
         <m.Wrap>
           <m.SmallOne>#{getDisplayValue(ageMapping, userInfo.age)}</m.SmallOne>
-          <m.SmallTwo>#{getDisplayValue(genderMapping, userInfo.gender)}</m.SmallTwo>
+          <m.SmallTwo>
+            #{getDisplayValue(genderMapping, userInfo.gender)}
+          </m.SmallTwo>
         </m.Wrap>
         <m.Wrap2>
           <m.SmallThree>#{getDiseaseName(userInfo.disease)}</m.SmallThree>
-          <m.SmallFour>#{getDisplayValue(heightMapping, userInfo.height)}</m.SmallFour>
-          <m.SmallFive>#{getDisplayValue(weightMapping, userInfo.weight)}</m.SmallFive>
+          <m.SmallFour>
+            #{getDisplayValue(heightMapping, userInfo.height)}
+          </m.SmallFour>
+          <m.SmallFive>
+            #{getDisplayValue(weightMapping, userInfo.weight)}
+          </m.SmallFive>
         </m.Wrap2>
       </m.Keyword>
 
       <img
         id="pwchange"
-        src={`${process.env.PUBLIC_URL}/logo/pwchange.svg`}
+        src="/static/logo/pwchange.svg"
         alt="pwchange button"
         style={{
           position: "absolute",
@@ -302,7 +320,7 @@ const Mypage = () => {
 
       <img
         id="keychange"
-        src={`${process.env.PUBLIC_URL}/logo/keychange.svg`}
+        src="/static/logo/keychange.svg"
         alt="keychange button"
         style={{
           position: "absolute",
@@ -313,9 +331,7 @@ const Mypage = () => {
         onClick={goChangeInfo}
       />
 
-      <m.Kit>
-        🔥 후기를 작성하고, 키워드를 강화해요!
-      </m.Kit>
+      <m.Kit>🔥 후기를 작성하고, 키워드를 강화해요!</m.Kit>
 
       <m.Check onClick={goReviewcheck1}>나의 리뷰 확인하기</m.Check>
       <m.Write onClick={goReview}>리뷰 작성하기</m.Write>
@@ -327,7 +343,7 @@ const Mypage = () => {
 
         <m.Button onClick={goAlarm1}>
           <m.ButtonImage onClick={goAlarm1}>
-            <img src={`${process.env.PUBLIC_URL}/logo/plus.svg`} alt="icon" />
+            <img src="/static/logo/plus.svg" alt="icon" />
           </m.ButtonImage>
           <m.ButtonText onClick={goAlarm1}>더 많은 알림 확인하기</m.ButtonText>
         </m.Button>

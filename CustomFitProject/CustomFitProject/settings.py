@@ -119,18 +119,17 @@ CORS_ALLOW_HEADERS = [
 CSRF_COOKIE_NAME = "csrftoken"
 CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', 'http://127.0.0.1:3000']
 
-
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
 
-#
 ROOT_URLCONF = 'CustomFitProject.urls'
 
 # 장고 정적 파일 설정
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'frontend', 'build','static'),
+    os.path.join(BASE_DIR, 'frontend', 'build', 'static'),
+    os.path.join(BASE_DIR, 'frontend', 'build'),
 ]
 
 TEMPLATES = [
@@ -191,6 +190,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
