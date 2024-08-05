@@ -45,29 +45,18 @@ const Review = () => {
   // 사용자 정보를 가져오는 함수
   const fetchUserInfo = async () => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("로그인 토큰이 없습니다.");
-      }
-
+      const token = localStorage.getItem("token"); // 로그인 후 저장된 토큰을 가져옵니다.
       const response = await axios.get(
         "http://127.0.0.1:8000/api/myPage/profile/",
         {
           headers: {
-            Authorization: `Token ${token}`,
-            "Content-Type": "application/json",
+            Authorization: `Token ${token}`, // Authorization 헤더에 토큰을 포함합니다.
           },
         }
       );
-
-      if (response.headers["content-type"].includes("application/json")) {
-        console.log("사용자 정보:", response.data);
-        setUserInfo(response.data);
-      } else {
-        throw new Error("서버가 JSON 응답을 반환하지 않았습니다.");
-      }
+      setUserInfo(response.data);
     } catch (error) {
-      console.error("사용자 정보 가져오기 오류:", error.message);
+      console.error("Error fetching user info:", error);
     }
   };
 
@@ -127,11 +116,21 @@ const Review = () => {
     return <div>Error: {error.message}</div>;
   }
 
+  // const goReviewcheck1 = () => {
+  //   if (selectedProduct && reviewText && selectedImage) {
+  //     navigate(`/Reviewcheck1`, {
+  //       state: { product: selectedProduct, review: reviewText, selectedImage },
+  //     });
+  //   } else {
+  //     alert("제품을 선택 후 버튼을 누르고 리뷰를 작성해주세요.");
+  //   }
+  // };
+
+  // 저장하기 버튼 클릭 시 API 호출
   const goReviewcheck1 = () => {
     if (selectedProduct && reviewText && selectedImage) {
-      navigate(`/Reviewcheck1`, {
-        state: { product: selectedProduct, review: reviewText, selectedImage },
-      });
+      // 리뷰 작성 API 호출
+      submitReview();
     } else {
       alert("제품을 선택 후 버튼을 누르고 리뷰를 작성해주세요.");
     }
@@ -139,6 +138,38 @@ const Review = () => {
 
   const handleImageClick = (imageType) => {
     setSelectedImage(imageType);
+  };
+
+  // 리뷰 작성 API 호출 함수
+  const submitReview = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+      };
+      const reviewData = {
+        GNB: selectedImage === "good" ? "G" : "B",
+        review: reviewText,
+      };
+      const response = await axios.patch(
+        `http://127.0.0.1:8000/api/myPage/recommended-products/${selectedProduct.id}/edit/`,
+        reviewData,
+        config
+      );
+      navigate(`/Reviewcheck1`, {
+        state: {
+          product: selectedProduct,
+          review: reviewText,
+          selectedImage,
+        },
+      });
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      alert("리뷰를 저장하는 도중 오류가 발생했습니다. 다시 시도해주세요.");
+    }
   };
 
   return (

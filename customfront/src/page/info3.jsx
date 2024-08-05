@@ -19,21 +19,24 @@ const Info3 = () => {
   const fetchUserInfo = async () => {
     setLoading(true); // 로딩 시작
     try {
-      const token = localStorage.getItem('token'); // 로그인 후 저장된 토큰을 가져옵니다.
+      const token = localStorage.getItem("token"); // 로그인 후 저장된 토큰을 가져옵니다.
       if (!token) {
-        throw new Error('로그인 토큰이 없습니다.');
+        throw new Error("로그인 토큰이 없습니다.");
       }
 
-      const response = await axios.get('http://127.0.0.1:8000/myPage/profile', {
-        headers: {
-          'Authorization': `Token ${token}`  // Authorization 헤더에 토큰을 포함합니다.
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/myPage/profile/",
+        {
+          headers: {
+            Authorization: `Token ${token}`, // Authorization 헤더에 토큰을 포함합니다.
+          },
         }
-      });
+      );
 
-      console.log('사용자 정보:', response.data); // 디버그 로그 추가
+      console.log("사용자 정보:", response.data); // 디버그 로그 추가
       setUserInfo(response.data); // 사용자 정보 저장
     } catch (error) {
-      console.error('사용자 정보 가져오기 오류:', error.message);
+      console.error("사용자 정보 가져오기 오류:", error.message);
       setUserError(error.message); // 에러 메시지 설정
     } finally {
       setLoading(false); // 로딩 종료
@@ -44,24 +47,26 @@ const Info3 = () => {
   const updateDisease = async (disease) => {
     setLoading(true); // 로딩 시작
     try {
-      const token = localStorage.getItem('token'); // 로그인 후 저장된 토큰을 가져옵니다.
+      const token = localStorage.getItem("token"); // 로그인 후 저장된 토큰을 가져옵니다.
       if (!token) {
-        throw new Error('로그인 토큰이 없습니다.');
+        throw new Error("로그인 토큰이 없습니다.");
       }
 
-      const response = await axios.put('http://127.0.0.1:8000/myPage/update/disease/', 
-      { disease: disease },
-      {
-        headers: {
-          'Authorization': `Token ${token}`,  // Authorization 헤더에 토큰을 포함합니다.
-          'Content-Type': 'application/json'
+      const response = await axios.put(
+        "http://127.0.0.1:8000/api/myPage/update/disease/",
+        { disease: disease },
+        {
+          headers: {
+            Authorization: `Token ${token}`, // Authorization 헤더에 토큰을 포함합니다.
+            "Content-Type": "application/json",
+          },
         }
-      });
+      );
 
-      console.log('질병 업데이트 성공:', response.data); // 디버그 로그 추가
+      console.log("질병 업데이트 성공:", response.data); // 디버그 로그 추가
       // 여기서 추가적인 상태 업데이트나 화면 전환을 수행할 수 있습니다.
     } catch (error) {
-      console.error('질병 업데이트 오류:', error.message);
+      console.error("질병 업데이트 오류:", error.message);
       setApiError(error.message); // 에러 메시지 설정
     } finally {
       setLoading(false); // 로딩 종료
@@ -79,7 +84,8 @@ const Info3 = () => {
     return <div>Loading...</div>;
   }
 
-  if (userError) { // 사용자 정보 에러가 있는 경우
+  if (userError) {
+    // 사용자 정보 에러가 있는 경우
     return <div>Error: {userError}</div>;
   }
 
@@ -87,7 +93,8 @@ const Info3 = () => {
     return <div>Loading...</div>;
   }
 
-  if (apiError) { // API 에러가 있는 경우
+  if (apiError) {
+    // API 에러가 있는 경우
     return <div>Error: {apiError}</div>;
   }
 
@@ -100,7 +107,7 @@ const Info3 = () => {
       <dd.Header>
         <img
           id="back"
-          src={`${process.env.PUBLIC_URL}/logo/backbtn2.svg`}
+          src="/static/logo/backbtn2.svg"
           alt="back button"
           style={{
             position: "absolute",
@@ -112,7 +119,6 @@ const Info3 = () => {
         />
       </dd.Header>
 
-      
       <dd.Ybox>
         <dd.Top>
           나에게{" "}
@@ -165,7 +171,7 @@ const Info3 = () => {
         <dd.Button>
           <img
             id="next"
-            src={`${process.env.PUBLIC_URL}/logo/next.svg`}
+            src="/static/logo/next.svg"
             alt="next"
             onClick={goInfo4}
           />

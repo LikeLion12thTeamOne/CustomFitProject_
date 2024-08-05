@@ -55,7 +55,7 @@ const Login2 = () => {
       localStorage.setItem("token", token);
 
       // 로그인 성공 후 네비게이션 처리
-      navigate(`/main0`);
+      navigate(`/info1`);
     } catch (error) {
       console.error(error);
       alert("로그인 실패: 사용자 이름이나 비밀번호를 확인하세요.");

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import * as i from "../style/styledreviewcheck3";
@@ -7,9 +7,14 @@ const Reviewcheck3 = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-  const { product, review } = location.state || {};
+  const {
+    product,
+    review,
+    selectedImage: initialSelectedImage,
+  } = location.state || {};
   const [newReview, setNewReview] = useState(review);
-  const [selectedImage, setSelectedImage] = useState(null); // 선택된 이미지 상태 추가
+  const [selectedImage, setSelectedImage] = useState(initialSelectedImage); // 초기 선택된 이미지 상태 추가
+  const [userInfo, setUserInfo] = useState(null); // 사용자 정보를 위한 상태 추가
 
   const goMain2 = () => {
     navigate(`/Main2`);
@@ -38,6 +43,28 @@ const Reviewcheck3 = () => {
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
+
+  // 사용자 정보를 가져오는 함수
+  const fetchUserInfo = async () => {
+    try {
+      const token = localStorage.getItem("token"); // 로그인 후 저장된 토큰을 가져옵니다.
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/myPage/profile/",
+        {
+          headers: {
+            Authorization: `Token ${token}`, // Authorization 헤더에 토큰을 포함합니다.
+          },
+        }
+      );
+      setUserInfo(response.data);
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserInfo();
+  }, []);
 
   const goReviewcheck2 = () => {
     // reviewcheck2로 이동하며 현재 제품 정보와 수정된 리뷰를 전달
@@ -76,13 +103,12 @@ const Reviewcheck3 = () => {
       };
 
       const body = {
-        GNB: "G",
+        GNB: selectedImage === "good" ? "G" : "B",
         review: newReview,
-        selectedImage: selectedImage, // 선택된 이미지 저장
       };
 
       await axios.patch(
-        `http://127.0.0.1:8000/myPage/recommended-products/${product.id}/edit/`,
+        `http://127.0.0.1:8000/api/myPage/recommended-products/${product.id}/edit/`,
         body,
         config
       );
@@ -173,7 +199,7 @@ const Reviewcheck3 = () => {
             <i.DropdownItem onClick={goReview}>
               <img
                 id="myreview"
-                src={`${process.env.PUBLIC_URL}/logo/myreview.svg`}
+                src="/static/logo/myreview.svg"
                 alt="myreview"
                 style={{
                   position: "absolute",
@@ -219,7 +245,8 @@ const Reviewcheck3 = () => {
 
       <i.Body>
         <i.Under>
-          김세모님! <br />[{product.name}]은 어떠셨어요?
+          {userInfo ? `${userInfo.first_name}님!` : "사용자님!"} <br />[
+          {product.name}]은 어떠셨어요?
         </i.Under>
 
         <i.Button2>

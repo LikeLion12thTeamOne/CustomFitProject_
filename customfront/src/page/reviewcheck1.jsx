@@ -1,32 +1,76 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 import * as e from "../style/styledreviewcheck1";
 
 const Reviewcheck1 = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-  const { product, review, selectedImage } = location.state || {};
   const [reviews, setReviews] = useState([]);
+  const [userInfo, setUserInfo] = useState(null); // 사용자 정보를 위한 상태 추가
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    // 로컬 스토리지에서 리뷰를 가져오기
-    const storedReviews = JSON.parse(localStorage.getItem("reviews")) || [];
-    setReviews(storedReviews);
-  }, []);
-
-  useEffect(() => {
-    if (product && review && selectedImage) {
-      // 기존 리뷰를 업데이트
-      setReviews((prevReviews) => {
-        const updatedReviews = prevReviews.map((r) =>
-          r.product.id === product.id ? { product, review, selectedImage } : r
-        );
-        localStorage.setItem("reviews", JSON.stringify(updatedReviews));
-        return updatedReviews;
-      });
+  // 사용자 정보를 가져오는 함수
+  const fetchUserInfo = async () => {
+    try {
+      const token = localStorage.getItem("token"); // 로그인 후 저장된 토큰을 가져옵니다.
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/myPage/profile/",
+        {
+          headers: {
+            Authorization: `Token ${token}`, // Authorization 헤더에 토큰을 포함합니다.
+          },
+        }
+      );
+      setUserInfo(response.data);
+    } catch (error) {
+      console.error("Error fetching user info:", error);
     }
-  }, [product, review, selectedImage]);
+  };
+
+  // 리뷰 목록을 가져오는 함수
+  const fetchReviews = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No token found");
+      }
+
+      const config = {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      };
+
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/myPage/recommended-products/",
+        config
+      );
+
+      // 리뷰가 포함된 제품 목록을 설정
+      setReviews(response.data);
+      setLoading(false);
+    } catch (err) {
+      if (err.message === "No token found") {
+        alert("토큰이 없습니다. 로그인이 필요합니다.");
+        navigate("/login");
+      } else if (err.response && err.response.status === 401) {
+        console.error("Authentication error: Unauthorized");
+        setError(new Error("인증 오류: 로그인이 필요합니다."));
+      } else {
+        console.error("An error occurred:", err.message);
+        setError(err);
+      }
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserInfo();
+    fetchReviews();
+  }, [navigate]);
 
   const goMain0 = () => {
     navigate(`/Main0`);
@@ -59,6 +103,14 @@ const Reviewcheck1 = () => {
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
     <e.Container>
@@ -188,20 +240,22 @@ const Reviewcheck1 = () => {
               >
                 <e.SmallBox5>
                   <span style={{ fontWeight: "bold", fontSize: "15px" }}>
-                    [{review.product.name}]
+                    [{review.product_name}]
                   </span>
-                  <span style={{ fontSize: "13px" }}>{review.review}</span>
-                  <e.Click type={review.selectedImage}>
+                  <span style={{ fontSize: "13px" }}>
+                    {review.review || "리뷰가 없습니다."}
+                  </span>
+                  <e.Click type={review.GNB}>
                     <img
                       id="review-image"
                       src={
-                        review.selectedImage === "good"
+                        review.GNB === "G"
                           ? "/static/logo/good2.png"
-                          : review.selectedImage === "bad"
+                          : review.GNB === "B"
                           ? "/static/logo/bad2.png"
                           : "/static/logo/default.png"
                       }
-                      alt={review.selectedImage || "default"}
+                      alt={review.GNB || "default"}
                     />
                   </e.Click>
                 </e.SmallBox5>

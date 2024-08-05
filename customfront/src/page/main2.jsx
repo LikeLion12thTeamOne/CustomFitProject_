@@ -51,6 +51,8 @@ const Main2 = () => {
         }
       );
 
+      console.log("서버 응답:", response);
+
       if (response.headers["content-type"].includes("application/json")) {
         console.log("사용자 정보:", response.data);
         setUserInfo(response.data);
@@ -59,6 +61,7 @@ const Main2 = () => {
       }
     } catch (error) {
       console.error("사용자 정보 가져오기 오류:", error.message);
+      setUserError(error.message);
     }
   };
 
@@ -77,6 +80,7 @@ const Main2 = () => {
   // 컴포넌트가 마운트될 때 사용자 정보를 가져옵니다.
   useEffect(() => {
     fetchUserInfo();
+    checkCartStatus(); // 페이지 로드 시 카트 상태 확인
   }, []);
 
   // 나머지 상태 및 함수 정의
@@ -89,7 +93,7 @@ const Main2 = () => {
   const [cartError, setCartError] = useState(null);
 
   const axiosInstance = axios.create({
-    baseURL: "http://127.0.0.1:8000/",
+    baseURL: "http://127.0.0.1:8000/api/",
     headers: {
       Authorization: `Token ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
@@ -97,28 +101,29 @@ const Main2 = () => {
     },
   });
 
-  useEffect(() => {
-    const checkCartStatus = async () => {
-      setLoading(true);
-      try {
-        const response = await axiosInstance.get("customFit/cart/");
-        console.log("현재 카트 상태:", response.data);
-        if (response.data.length === 0) {
-          console.log("카트가 비어 있습니다.");
-        } else {
-          console.log("카트에 상품이 있습니다.");
-        }
-      } catch (error) {
-        console.error("빈 상태 확인 중 오류 발생:", error.message);
-        setError(error);
-      } finally {
-        setLoading(false);
+  // 카트 상태 서버와 연동
+  const checkCartStatus = async () => {
+    setLoading(true);
+    try {
+      const response = await axiosInstance.get("customFit/cart/");
+      console.log("현재 카트 상태:", response.data);
+      const cartItems = response.data.map((item) => item.product);
+      setBox2Items(cartItems);
+      setSelectedItems(cartItems); // 여기에 selectedItems도 업데이트
+      if (response.data.length === 0) {
+        console.log("카트가 비어 있습니다.");
+      } else {
+        console.log("카트에 상품이 있습니다.");
       }
-    };
+    } catch (error) {
+      console.error("카트 상태 확인 중 오류 발생:", error.message);
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    checkCartStatus();
-  }, []);
-
+  // 상품 추가 또는 삭제 시 checkCartStatus 호출해 상태 업데이트
   const toggleCheckbox = async (item) => {
     const isSelected = selectedItems.some(
       (selectedItem) => selectedItem.product_id === item.product_id
@@ -134,16 +139,22 @@ const Main2 = () => {
         console.log(
           `상품 ID ${item.product_id}이(가) 카트에서 삭제되었습니다.`
         );
+        await checkCartStatus(); // 카트 상태 체크
       } catch (error) {
         console.error("카트에서 삭제 중 오류 발생:", error.message);
         setError(error);
       }
     } else {
+      if (box2Items.length >= 5) {
+        alert("카트에 담을 수 있는 최대 상품 수는 5개입니다.");
+        return;
+      }
       setSelectedItems((prevSelectedItems) => [...prevSelectedItems, item]);
 
       try {
         await addToCart(item.product_id);
         console.log(`상품 ID ${item.product_id}이(가) 카트에 추가되었습니다.`);
+        await checkCartStatus(); // 카트 상태 체크
       } catch (error) {
         console.error("카트 추가 중 오류 발생:", error.message);
         setError(error);
@@ -170,6 +181,7 @@ const Main2 = () => {
     setSearchQuery(event.target.value);
   };
 
+  // 상품 추가
   const addToCart = async (product_id) => {
     try {
       const response = await axiosInstance.post(
@@ -183,9 +195,20 @@ const Main2 = () => {
       );
       console.log("API 응답:", response.data);
       console.log(`상품 ID ${product_id}이(가) 카트에 추가되었습니다.`);
+      await checkCartStatus(); // 카트 상태 체크
     } catch (error) {
-      console.error("카트 추가 중 오류 발생:", error.message);
-      setError(error);
+      if (error.response && error.response.status === 400) {
+        const errorMessage = error.response.data.error;
+        console.error("카트 추가 중 오류 발생:", errorMessage);
+        if (errorMessage === "카트에 담을 수 있는 최대 상품 수는 5개입니다.") {
+          alert("카트에 담을 수 있는 최대 상품 수는 5개입니다.");
+        } else {
+          setError(errorMessage);
+        }
+      } else {
+        console.error("카트 추가 중 오류 발생:", error.message);
+        setError(error.message);
+      }
     }
   };
 
@@ -201,6 +224,7 @@ const Main2 = () => {
       );
       console.log("API 응답:", response.data);
       console.log(`상품 ID ${product_id}이(가) 카트에서 제거되었습니다.`);
+      await checkCartStatus(); // 카트 상태 체크
     } catch (error) {
       console.error("카트에서 제거 중 오류 발생:", error.message);
       setError(error);
@@ -229,6 +253,7 @@ const Main2 = () => {
       }
       setBox2Items((prevItems) => [...prevItems, ...uniqueItems]);
       console.log("Box2에 추가된 상품:", uniqueItems);
+      await checkCartStatus(); // 카트 상태 체크
     } catch (error) {
       console.error("상품 추가 중 오류 발생:", error.message);
       setError(error);
@@ -237,36 +262,41 @@ const Main2 = () => {
     }
   };
 
-  const deleteItemFromBox2 = (id) => {
-    setBox2Items((prevItems) =>
-      prevItems.filter((item) => item.product_id !== id)
-    );
-  };
-
-  const clearBox2Items = async () => {
+  const deleteItemFromBox2 = async (id) => {
     try {
-      const itemIds = box2Items.map((item) => item.product_id);
-      if (itemIds.length > 0) {
-        await axiosInstance.post(
-          "customFit/cart/clear/",
-          {
-            item_ids: itemIds,
-          },
-          {
-            headers: {
-              "X-CSRFToken": localStorage.getItem("csrftoken") || "",
-            },
-          }
-        );
-      }
-      setBox2Items([]);
-      console.log("Box2의 모든 상품이 카트에서 제거되었습니다.");
+      await removeFromCart(id);
+      setBox2Items((prevItems) =>
+        prevItems.filter((item) => item.product_id !== id)
+      );
+      await checkCartStatus(); // 카트 상태 체크
     } catch (error) {
       console.error("Box2 항목 삭제 중 오류 발생:", error.message);
       setError(error);
     }
   };
 
+  // 카트를 모두 비우는 함수
+  const clearBox2Items = async () => {
+    try {
+      await axiosInstance.post(
+        "customFit/cart/clear/",
+        {},
+        {
+          headers: {
+            "X-CSRFToken": localStorage.getItem("csrftoken") || "",
+          },
+        }
+      );
+      setBox2Items([]);
+      console.log("Box2의 모든 상품이 카트에서 제거되었습니다.");
+      await checkCartStatus(); // 카트 상태 체크
+    } catch (error) {
+      console.error("Box2 항목 삭제 중 오류 발생:", error.message);
+      setError(error);
+    }
+  };
+
+  // 선택된 상품 카트에서 제거
   const deleteSelectedItem = async (id) => {
     setSelectedItems((prevItems) =>
       prevItems.filter((item) => item.product_id !== id)
@@ -275,12 +305,14 @@ const Main2 = () => {
     try {
       await removeFromCart(id);
       console.log(`상품 ID ${id}이(가) 카트에서 삭제되었습니다.`);
+      await checkCartStatus(); // 카트 상태 체크
     } catch (error) {
       console.error("선택된 항목 삭제 중 오류 발생:", error.message);
       setError(error);
     }
   };
 
+  // 선택된 모든 상품을 카트에서 제거하는 함수
   const clearSelectedItems = async () => {
     try {
       for (const item of selectedItems) {
@@ -288,6 +320,7 @@ const Main2 = () => {
       }
       setSelectedItems([]);
       console.log("선택된 모든 상품이 카트에서 제거되었습니다.");
+      await checkCartStatus(); // 카트 상태 체크
     } catch (error) {
       console.error("선택된 항목 모두 삭제 중 오류 발생:", error.message);
       setError(error);
@@ -311,6 +344,7 @@ const Main2 = () => {
 
       await clearBox2Items();
       console.log("비교 후 카트가 비워졌습니다.");
+      await checkCartStatus(); // 카트 상태 체크
     } catch (error) {
       console.error("비교하기 중 오류 발생:", error.message);
       setError(error);
@@ -534,14 +568,17 @@ const Main2 = () => {
         </l.List2>
       </l.List>
 
-      <l.Kit>맞춤 건강 키트</l.Kit>
+      <l.Kit>맞춤 건강 카트</l.Kit>
 
       <l.Body>
         <l.SelectedItemsSection>
           <l.SelectedItemsList>
             {selectedItems.map((item) => (
               <l.SelectedItem key={item.product_id}>
-                {item.product_name}
+                {/* 상품 이름의 앞 5글자만 표시 */}
+                {item.product_name.length > 5
+                  ? item.product_name.substring(0, 5) + ".."
+                  : item.product_name}
                 <l.DelButton>
                   <img
                     id="del"

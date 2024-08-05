@@ -62,7 +62,7 @@ const Main3 = () => {
   // 사용자 정보를 가져오는 함수
   const fetchUserInfo = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token"); // 로그인 후 저장된 토큰을 가져옵니다.
       if (!token) {
         throw new Error("로그인 토큰이 없습니다.");
       }
@@ -71,7 +71,7 @@ const Main3 = () => {
         "http://127.0.0.1:8000/api/myPage/profile/",
         {
           headers: {
-            Authorization: `Token ${token}`,
+            Authorization: `Token ${token}`, // Authorization 헤더에 토큰을 포함합니다.
             "Content-Type": "application/json",
           },
         }
@@ -85,6 +85,7 @@ const Main3 = () => {
       }
     } catch (error) {
       console.error("사용자 정보 가져오기 오류:", error.message);
+      setUserError(error.message); // 에러 메시지 설정
     }
   };
 

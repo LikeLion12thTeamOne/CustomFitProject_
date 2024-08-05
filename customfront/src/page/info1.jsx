@@ -28,11 +28,14 @@ const Info1 = () => {
         throw new Error("로그인 토큰이 없습니다.");
       }
 
-      const response = await axios.get("http://127.0.0.1:8000/myPage/profile", {
-        headers: {
-          Authorization: `Token ${token}`, // Authorization 헤더에 토큰을 포함합니다.
-        },
-      });
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/myPage/profile/",
+        {
+          headers: {
+            Authorization: `Token ${token}`, // Authorization 헤더에 토큰을 포함합니다.
+          },
+        }
+      );
 
       console.log("사용자 정보:", response.data); // 디버그 로그 추가
       setUserInfo(response.data); // 사용자 정보 저장
@@ -54,7 +57,7 @@ const Info1 = () => {
       }
 
       const response = await axios.put(
-        "http://127.0.0.1:8000/myPage/update/age/",
+        "http://127.0.0.1:8000/api/myPage/update/age/",
         { age: ageRange },
         {
           headers: {

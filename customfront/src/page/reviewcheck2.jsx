@@ -7,8 +7,9 @@ const Reviewcheck2 = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-  const { product, review, selectedImage } = location.state || {}; // selectedImage 추가
+  const { product, review, selectedImage } = location.state || {};
   const [productData, setProductData] = useState(null);
+  const [userInfo, setUserInfo] = useState(null); // 사용자 정보를 위한 상태 추가
 
   const goMain2 = () => {
     navigate(`/Main2`);
@@ -38,6 +39,28 @@ const Reviewcheck2 = () => {
     setIsMenuOpen(false);
   };
 
+  // 사용자 정보를 가져오는 함수
+  const fetchUserInfo = async () => {
+    try {
+      const token = localStorage.getItem("token"); // 로그인 후 저장된 토큰을 가져옵니다.
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/myPage/profile/",
+        {
+          headers: {
+            Authorization: `Token ${token}`, // Authorization 헤더에 토큰을 포함합니다.
+          },
+        }
+      );
+      setUserInfo(response.data);
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserInfo();
+  }, []);
+
   useEffect(() => {
     const fetchProductData = async () => {
       if (product) {
@@ -54,7 +77,7 @@ const Reviewcheck2 = () => {
           };
 
           const response = await axios.get(
-            `http://127.0.0.1:8000/myPage/recommended-products/${product.id}/`,
+            `http://127.0.0.1:8000/api/myPage/recommended-products/${product.id}/`,
             config
           );
           setProductData(response.data);
@@ -74,7 +97,7 @@ const Reviewcheck2 = () => {
 
   const goReviewcheck3 = () => {
     if (product && review) {
-      navigate(`/Reviewcheck3`, { state: { product, review, selectedImage } }); // selectedImage 추가
+      navigate(`/Reviewcheck3`, { state: { product, review, selectedImage } });
     } else {
       alert("제품 정보나 리뷰가 없습니다.");
     }
@@ -199,7 +222,7 @@ const Reviewcheck2 = () => {
       )}
 
       <v.Ybox>
-        <v.Top>[{product.name}]</v.Top>
+        <v.Top>{userInfo ? `${userInfo.first_name}님!` : "사용자님!"}</v.Top>
         <v.Click>
           <img
             id="review-image"
@@ -208,9 +231,9 @@ const Reviewcheck2 = () => {
                 ? "/static/logo/good2.png"
                 : selectedImage === "bad"
                 ? "/static/logo/bad2.png"
-                : "/static/logo/default.png"
-            } // 선택된 이미지가 없을 경우 기본 이미지
-            alt={selectedImage || "default"}
+                : null // 선택된 이미지가 없을 경우 null로 설정
+            }
+            alt={selectedImage || ""}
             width="95px"
           />
         </v.Click>
